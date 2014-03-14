@@ -10,8 +10,8 @@ module Purger
   def exec(projdir)
     confirm('Purge all the published contents') do
       print_spacer "Removing published contents...".bold.magenta
-      Purger::purge_folders(projdir) do |site|
-        puts "Removing #{site.upcase} folder..."
+      Purger::purge_folders(projdir) do |site, path|
+        puts "Removing #{site.upcase} folder (#{platform(path)})..."
       end
       print_spacer "Removed #{@dirs_count} published directories!".bold.yellow
     end
@@ -21,11 +21,15 @@ module Purger
     @published_paths.each do |path|
       @sites.each do |site|
         if File.exists?((published_dir = File.join(projdir, path, site)))
-          yield site
+          yield site, path
           FileUtils.rm_rf published_dir
           @dirs_count += 1
         end
       end
     end
+  end
+  
+  def platform(path)
+    path == 'public-m' ? 'Mobile' : 'Desktop'
   end
 end
