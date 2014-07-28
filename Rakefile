@@ -14,9 +14,10 @@ namespace :git do
   end
   
   desc 'Load the branches from an external file and/or by spcifing a specific one: i.e. rake git:branches file=aggregate branch=add_this_one'
-  task :branches => :basedirs do
+  task :branches, [:default_file] => :basedirs do |_,args|
+    args.with_defaults(:default_file => 'rebase')
     keys = %w[file branch]
-    Git::branches(options(keys))
+    Git::branches(options(keys).merge(args))
   end
   
   desc 'Aligns specified branch with origin: i.e. rake git:align branch=my_branch'
