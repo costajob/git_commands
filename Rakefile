@@ -52,12 +52,6 @@ namespace :git do
 end
 
 namespace :publishing do
-  desc 'Create a SQL to output publishing jobs on QA server by starting date'
-  task :jobs_from do
-    starting_from = ENV['date'] || Date.today.strftime("%Y-%m-%d")
-    SqlJobsAnalyzer::exec(starting_from)
-  end
-  
   desc 'Purge all of the published contents'
   task :purge do
     projdir = ENV['projdir'] || File.join(ENV['HOME'], 'Sites', 'oro')
