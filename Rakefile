@@ -47,6 +47,7 @@ namespace :git do
     keys.each do |key|
       hash[key.to_sym] = ENV[key] if ENV[key]
     end
-    defaults.merge(hash)
+    return defaults if hash.empty?
+    hash
   end    
 end
