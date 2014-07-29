@@ -14,10 +14,10 @@ namespace :git do
   end
   
   desc 'Load the branches from an external file and/or by spcifing a specific one: i.e. rake git:branches file=aggregate branch=add_this_one'
-  task :branches, [:default_file] => :basedirs do |_,args|
-    args.with_defaults(:default_file => 'rebase')
+  task :branches, [:file] => :basedirs do |_,args|
+    args.with_defaults(:file => 'rebase')
     keys = %w[file branch]
-    Git::branches(options(keys).merge(args))
+    Git::branches(options(keys,args.to_hash))
   end
   
   desc 'Aligns specified branch with origin: i.e. rake git:align branch=my_branch'
@@ -42,19 +42,11 @@ namespace :git do
     Git::aggregate
   end
   
-  def options(keys = [])
+  def options(keys,defaults={})
     hash = {}
     keys.each do |key|
       hash[key.to_sym] = ENV[key] if ENV[key]
     end
-    hash
+    defaults.merge(hash)
   end    
-end
-
-namespace :publishing do
-  desc 'Purge all of the published contents'
-  task :purge do
-    projdir = ENV['projdir'] || File.join(ENV['HOME'], 'Sites', 'oro')
-    Purger::exec(projdir)
-  end
 end

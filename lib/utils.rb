@@ -35,12 +35,6 @@ module Utils
     puts s.green
   end
   
-  def print_e(e, &b)
-    puts "*** ERROR: #{e.message}".red.bold
-    b.call if block_given?
-    raise e
-  end
-  
   def ask message
     print message.bold.grey
     STDIN.gets.chomp

@@ -21,8 +21,7 @@ module Git
   end
   
   def branches(options)
-    default_file = options.fetch(:default_file, nil)
-    file         = options.fetch(:file, default_file)
+    file         = options.fetch(:file, nil)
     branch       = options.fetch(:branch, nil)
     @branches = []
     if file
