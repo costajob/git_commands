@@ -1,4 +1,4 @@
 gucci_utils
 ===========
 
-Utility libraries related to the GUcci.com project.
+Utility libraries to work with remote repositories listed inside plain files. 
