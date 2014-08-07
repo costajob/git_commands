@@ -4,8 +4,8 @@ module Git
   extend self
   
   class GitException < StandardError; end
-  PROJ_DIR = File.join(ENV['HOME'], 'Sites')
-  FILE_DIR = File.join(ENV['HOME'], 'Sites')
+  PROJ_DIR = ENV.fetch('PROJ_FIR') { File.join(ENV['HOME'], 'Sites') }
+  FILE_DIR = ENV.fetch('FILE_DIR') { PROJ_DIR } 
   
   attr_reader :ptojdir, :filedir, :repo_name, :repo_path, :branches
   
