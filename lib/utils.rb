@@ -17,9 +17,9 @@ class String
     "\e[0m#{self}"
   end
   
-  def method_missing(id, *args, &block)
-    if @@color_codes.keys.include?(id)
-      "\e[#{@@color_codes[id]}m#{self}\e[0m"
+  def method_missing(method, *args, &block)
+    if @@color_codes.keys.include?(method)
+      "\e[#{@@color_codes[method]}m#{self}\e[0m"
     else
       super
     end
@@ -48,26 +48,6 @@ module Utils
       b.call
     elsif res =~ /n/i
       puts 'Aborting...'.red.bold
-    end
-  end
-  
-  def choose(options, &b)
-    msg = options.fetch(:msg)
-    choices = options.fetch(:choices)
-    multi = options.fetch(:multi, true)
-    multi_label = multi ? ' - use '.magenta + '+'.bold + ' to separate choices, '.magenta + '*'.bold + ' for all - '.magenta : ' '
-    if choices.is_a?(Hash)
-      choiches = choices.keys.map(&:to_s)
-      labels = choices.map { |k,v| "#{v} [" + "#{k}".bold.yellow + "]".normal }
-    else
-      labels = choices.map { |choice| choice.to_s.bold.yellow }
-    end
-    begin
-      res = ask "#{msg}".bold + multi_label + "(#{labels.join(' - ')})?".normal
-      responses = multi ? (res == '*' ? choiches : res.split('+').map(&:strip)) : res
-    end until responses.all? { |response| choiches.include?(response) }
-    responses.each do |r|
-      b.call(r)
     end
   end
 end
