@@ -7,8 +7,6 @@ module Git
   PROJ_DIR = ENV.fetch('PROJ_DIR') { File.join(ENV['HOME'], 'Sites') }
   FILE_DIR = ENV.fetch('FILE_DIR') { PROJ_DIR } 
   
-  attr_reader :ptojdir, :filedir, :repo_name, :repo_path, :branches
-  
   def basedirs(options)
     @projdir = options.fetch(:projdir, PROJ_DIR)
     @filedir = options.fetch(:filedir, FILE_DIR)
