@@ -4,7 +4,7 @@ module Git
   extend self
   
   class GitException < StandardError; end
-  PROJ_DIR = ENV.fetch('PROJ_FIR') { File.join(ENV['HOME'], 'Sites') }
+  PROJ_DIR = ENV.fetch('PROJ_DIR') { File.join(ENV['HOME'], 'Sites') }
   FILE_DIR = ENV.fetch('FILE_DIR') { PROJ_DIR } 
   
   attr_reader :ptojdir, :filedir, :repo_name, :repo_path, :branches
@@ -15,7 +15,7 @@ module Git
   end
   
   def repo
-    @repo_name = ask 'Provide a valid GIT repository:'.bold.grey
+    @repo_name = ask "Provide a valid GIT repository (location: #{PROJ_DIR}):".bold.grey
     puts "Using #{@repo_name} repo...".bold.yellow
     @repo_path = File.join(@projdir, @repo_name.to_s)
   end
