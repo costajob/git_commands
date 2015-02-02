@@ -63,7 +63,7 @@ module Git
   end
   
   def rebase(options)
-    options = options.map { |option| "-#{option}" }.join(' ')
+    options = format_options(options)
     Dir.chdir @repo_path do
       @branches.each do |branch|
         ack = true
@@ -113,5 +113,10 @@ module Git
       end      
     end
     print_spacer "Release branch created for repo #{@repo_name}: #{release}".bold.yellow
+  end
+
+  def format_options(options)
+    options = options.map { |option| "-#{option}" }
+    options.join(" ")
   end
 end

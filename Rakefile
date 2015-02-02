@@ -31,7 +31,7 @@ namespace :git do
     Git::remove
   end
   
-  desc 'Rebase the specified branches with master with options: i.e rake git:rebase file=rebase options=i'
+  desc 'Rebase the specified branches with master with options: i.e rake git:rebase file=rebase opts=i'
   task :rebase => [:align, :branches] do
     options = ENV['opts'] ? ENV['opts'].split('') : []
     Git::rebase(options)
