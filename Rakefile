@@ -1,53 +1,9 @@
-Dir[File.join(File.dirname(__FILE__), 'lib', '*.rb')].each {|file| require file }
-include Utils
+require 'rake/testtask'
+import 'tasks/git_utils.rake'
 
-namespace :git do
-  desc 'Set base directory: i.e rake git:basedir projdir=/my/proj/dir filedir=/my/file/dir'
-  task :basedirs do
-    keys = %w[projdir filedir]
-    Git::basedirs(options(keys))
-  end
-  
-  desc 'Provide the GIT repository: i.e. rake git:repos'
-  task :repo => :basedirs do
-    Git::repo
-  end
-  
-  desc 'Load the branches from an external file and/or by spcifing a specific one: i.e. rake git:branches file=aggregate branch=add_this_one'
-  task :branches, [:file] => :basedirs do |_,args|
-    args.with_defaults(:file => 'rebase')
-    keys = %w[file branch]
-    Git::branches(options(keys,args.to_hash))
-  end
-  
-  desc 'Aligns specified branch with origin: i.e. rake git:align branch=my_branch'
-  task :align => :repo do
-    branch = ENV['branch'] || 'master'
-    Git::align(branch)
-  end
-  
-  desc 'Remove the specified branch/branches locally and from origin: i.e. rake git:remove file=remove'
-  task :remove => [:repo, :branches] do
-    Git::remove
-  end
-  
-  desc 'Rebase the specified branches with master with options: i.e rake git:rebase file=rebase opts=i'
-  task :rebase => [:align, :branches] do
-    options = ENV['opts'] ? ENV['opts'].split('') : []
-    Git::rebase(options)
-  end
-  
-  desc 'Aggregate specified branches into a single one: i.e. rake git:aggregate file=aggregate'
-  task :aggregate => [:align, :branches] do
-    Git::aggregate
-  end
-  
-  def options(keys,defaults={})
-    hash = {}
-    keys.each do |key|
-      hash[key.to_sym] = ENV[key] if ENV[key]
-    end
-    return defaults if hash.empty?
-    hash
-  end    
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'test'
+  t.test_files = FileList['test/*_test.rb']
 end
+
+task :default => :test
