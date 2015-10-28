@@ -41,7 +41,7 @@ In case **no branches** are fetched the **script halts**.
 Is also assumed you're pointing to a project directory somewhere, so the script could move in and execute the GIT commands for you.
 
 To call this task with arguments call it like that:
-```
+```ruby
 rake git_utils:setup repo=git_repository base_dir=repo_path branches_file=file_listing_branches branches=list,of,branches,separated,by,comma
 ```
 Here are the arguments list:
@@ -55,7 +55,7 @@ This is probably the most useful command in case you have several branch to reba
 Consider after the rabse the branch is pushed to origin with force, so be aware in
 case more than one programmer access the same branche from different computers.
 As the other tasks, it depends on the setup one, so it accepts the same arguments
-```
+```ruby
 # loads branches from the repo _.branches_ file, repo si located at _HOME/Sites/my_repo_
 rake git_utils:rebase repo=my_repo
 ```
@@ -63,7 +63,7 @@ rake git_utils:rebase repo=my_repo
 ### purge
 This command remove all of your branches locally and on origin. A confirmation is asked before the removal.
 Use the same arguments as setup.
-```
+```ruby
 # purge old branches specified at the coomad line, repo si located at _HOME/Sites/my_repo_
 rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 ```
@@ -72,7 +72,7 @@ rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 It should be useful to aggregate your branches into a single one in case you want to create a release branch.
 It uses the following naming convention: rb_yyyy_mm_dd
 Use the same arguments as setup.
-```
+```ruby
 # aggregate branches listed in the _/tmp/to_release file, repo si located at _HOME/Sites/my_repo_
 rake git_utils:aggregate repo=my_repo branches_file=/tmp/to_release
 ```
