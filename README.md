@@ -7,19 +7,19 @@ Utility library to work with remote repositories listed inside plain files.
 * [Utility](#utility)
 * [Prerequisites](#prerequisites)
 * [Tasks](#tasks)
-  * [git_utils:setup](#git_utils-setup)
-  * [git_utils:rebase](#git_utils-rebase)
-  * [git_utils:purge](#git_utils-purge)
-  * [git_utils:aggregate](#git_utils-aggregate)
+  * [setup](#setup)
+  * [rebase](#rebase)
+  * [purge](#purge)
+  * [aggregate](#aggregate)
 
 ## Workflow
 This script will facilitate adopting a subset of the branch-featuring workflow characterised by:
-* each feature will have its own branch
-* feature branches derive directly form master
-* integration of master to feature branch happens via rebasing
-* rebasing interactively is used on feature branch to squash comments and get a single commit per feature branch
-* pushing with force on local branches is not an issue
-* release branches are created aggregating multiple branches into a new one
+* each **feature** will have **its own branch**
+* **feature** branches **derive** directly **form master**
+* **integration** of master to feature branch happens **via rebasing**
+* rebasing interactively is used on feature branch to **squash commits** to get a **single one per feature** branch
+* **pushing with force** on local branches is not an issue
+* **release** branches are created **aggregating multiple branches** into a new one
 
 ## Utility
 This script will help you in the following cases:
@@ -50,17 +50,17 @@ Here are the arguments list:
 * **branches_file**: the path to the file, if any, listing the branches names. It defaults to the **.branches** file inside of your repo path (you need to add it to the .gitignore then)
 * **branches**: a list of branches separated by comma (optional)
 
-### git_utils:rebase
+### rebase
 This is probably the most useful command in case you have several branch to rebase with _origin/master_ frequently.
 Consider after the rabse the branch is pushed to origin with force, so be aware in
 case more than one programmer access the same branche from different computers.
 As the other tasks, it depends on the setup one, so it accepts the same arguments
 
-### git_utils:purge
+### purge
 This command remove all of your branches locally and on origin. A confirmation is asked before the removal.
 Use the same arguments as setup.
 
-### git_utils:aggregate
+### aggregate
 It should be useful to aggregate your branches into a single one in case you want to create a release branch.
 It uses the following naming convention: rb_yyyy_mm_dd
 Use the same arguments as setup.
