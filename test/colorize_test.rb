@@ -5,23 +5,15 @@ using GitUtils::Colorize
 
 describe GitUtils::Colorize do
   let(:klass) { GitUtils::Colorize }
-  let(:instance) { 'oh my' }
-
-  it 'must respond to bold' do
-    instance.bold.must_be_instance_of String
-  end
-
-  it 'must respond to normal' do
-    instance.normal.must_be_instance_of String
-  end
+  let(:instance) { 'colorize me!' }
 
   it 'must respond to dynamic methods' do
-    refute puts "should be red: " << instance.red
-    refute puts "should be green: " << instance.green
-    refute puts "should be yellow: " << instance.yellow
-    refute puts "should be blue: " << instance.blue
-    refute puts "should be magenta: " << instance.magenta
-    refute puts "should be cyan: " << instance.cyan
-    refute puts "should be grey: " << instance.grey
+    refute puts 'must be red: ' << instance.red
+    refute puts 'must be green: ' << instance.green
+    refute puts 'must be yellow: ' << instance.yellow
+    refute puts 'must be blue: ' << instance.blue
+    refute puts 'must be magenta: ' << instance.magenta
+    refute puts 'must be cyan: ' << instance.cyan
+    refute puts 'must be grey: ' << instance.grey
   end
 end
