@@ -53,7 +53,7 @@ module GitUtils
           `git checkout #{branch}`
           `git pull origin #{branch}`
           `git rebase origin/master`
-          error(message: 'Halting unfinished rebase...', error: GitError) { `git rebase --abort` } if unfinished_rebase?
+          error(message: 'Halting unfinished rebase', error: GitError) { `git rebase --abort` } if unfinished_rebase?
           `git push origin #{branch} -f`
           `git checkout master`
           `git branch -D #{branch}`
@@ -83,7 +83,7 @@ module GitUtils
 
     def fetch_branches
       return [] unless File.exist?(@branches_file)
-      warning(message: 'Loading branches file...')
+      warning(message: 'Loading branches file')
       File.foreach(@branches_file).map(&:strip)
     end
 
