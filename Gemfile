@@ -3,5 +3,8 @@ fail "Ruby should be >= #{MIN_VERSION}" unless RUBY_VERSION.to_f >= MIN_VERSION
 
 source "https://rubygems.org"
 
-gem 'minitest'
-gem 'rr'
+group :test do
+  gem 'rake'
+  gem 'minitest'
+  gem 'rr'
+end
