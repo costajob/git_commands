@@ -3,31 +3,24 @@ require_relative '../lib/command'
 namespace :git_utils do
   desc <<END
 Setup the command instance:
-  > rake git_utils:setup repo=git_repository base_dir=repo_path branches_file=file_listing_branches
-  > rake git_utils:setup repo=git_repository base_dir=repo_path branch=single_branch_name
+  > rake git_utils:setup repo=git_repository base_dir=repo_path branches_file=file_listing_branches branches=list,of,branches,separated,by,comma
 END
   task :setup do
-    repo = ENV.fetch('repo') { fail ArgumentError, 'please specify a valid repository name!' }
-    @command = GitUtils::Command::new(repo: repo, base_dir: ENV['base_dir'], branches_file: ENV['branches_file'], branch: ENV['branch'])
+    @command = GitUtils::Command::new(repo: ENV['repo'], base_dir: ENV['base_dir'], branches_file: ENV['branches_file'], branches: ENV['branches'])
   end
   
-  desc 'Load the branches from an external file or by spcifing one'
-  task :branches => :setup do
-    @command.branches
-  end
-  
-  desc 'Purge specified branch/branches locally and from origin'
-  task :purge => :branches do
+  desc 'Purge specified branches locally and from origin'
+  task :purge => :setup do
     @command.purge
   end
   
-  desc 'Rebase specified branch/branches with master'
-  task :rebase => :branches do
+  desc 'Rebase specified branches with master'
+  task :rebase => :setup do
     @command.rebase
   end
   
   desc 'Aggregate specified branches into a single one'
-  task :aggregate => :branches do
+  task :aggregate => :setup do
     @command.aggregate
   end
 end

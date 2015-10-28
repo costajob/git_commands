@@ -8,26 +8,17 @@ module GitUtils
     include Prompt
 
     class GitError < StandardError; end
+    class NoBranchesError < StandardError; end
 
     BASE_DIR = File.join(ENV['HOME'], 'Sites')
     UNFINISHED_REBASE_FILES = %w(rebase-merge rebase-apply)
 
-    def initialize(repo:, base_dir: nil, branches_file: nil, branch: nil)
-      @repo = repo
+    def initialize(repo:, base_dir: nil, branches_file: nil, branches: nil)
+      @repo = repo || fail(ArgumentError, 'Please specify a valid repository name!')
       @base_dir = base_dir || BASE_DIR
-      @branch = branch
-      @base_dir
       @branches_file = branches_file || repo_path.join('.branches')
-    end
-
-    def branches
-      @branches ||= if @branch
-                      [@branch]
-                    else
-                      fetch_branches
-                    end.tap do |branches|
-                      confirm_fetching(branches)
-                    end
+      @branches = branches.to_s.split(',') + fetch_branches
+      confirm_branches
     end
 
     def align_master
@@ -41,7 +32,7 @@ module GitUtils
     def purge
       Dir.chdir repo_path do
         %x[git checkout master]
-        branches.each do |branch|
+        @branches.each do |branch|
           error(message: 'Trying ro remove master!', error: GitError) if branch == 'master'
           warning(message: "Removing branch: #{branch}")
           confirm('Remove local branch') do
@@ -57,7 +48,7 @@ module GitUtils
     def rebase
       align_master
       Dir.chdir repo_path do
-        branches.each do |branch|
+        @branches.each do |branch|
           warning(message: "Rebasing branch: #{branch}")
           `git checkout #{branch}`
           `git pull origin #{branch}`
@@ -76,7 +67,7 @@ module GitUtils
       warning(message: "Creating aggregate branch: #{aggregate_branch}")
       Dir.chdir repo_path do
         `git branch #{aggregate_branch}`
-        branches.each do |branch|
+        @branches.each do |branch|
           `git checkout -b #{temp} origin/#{branch} --no-track`
           `git rebase origin/master`
           `git rebase #{aggregate_branch}`
@@ -91,6 +82,7 @@ module GitUtils
     private 
 
     def fetch_branches
+      return [] unless File.exist?(@branches_file)
       warning(message: 'Loading branches file...')
       File.foreach(@branches_file).map(&:strip)
     end
@@ -109,11 +101,12 @@ module GitUtils
       @aggregate_branch ||= Time.new.strftime("rb_%Y-%m-%d")
     end
 
-    def confirm_fetching(branches)
-      size = branches.to_a.size
+    def confirm_branches
+      error(message: 'No branches have been loaded!', error: NoBranchesError) if @branches.empty?
+      size = @branches.to_a.size
       plural = size > 1 ? 'es' : ''
       success "Successfully loaded #{size} branch#{plural}:"
-      puts branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" }
+      puts @branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" }
     end
   end
 end
