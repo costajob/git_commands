@@ -9,9 +9,9 @@ describe GitUtils::Command do
   let(:instance) { klass::new(repo: repo, branches: branches.join(',')) }
   let(:branches) { %w[feature/love-me-tender feature/all-shock-up feature/dont-be-cruel] }
   let(:branches_file) { Tempfile.new('branches') << branches.join("\n") }
-  before do 
-    stub(klass).check_connection { true }
+  before do
     branches_file.rewind
+    stub(klass).check_connection { true }
   end
 
   it 'must define state' do

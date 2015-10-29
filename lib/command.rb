@@ -15,8 +15,14 @@ module GitUtils
     BASE_DIR = File.join(ENV['HOME'], 'Sites')
     UNFINISHED_REBASE_FILES = %w(rebase-merge rebase-apply)
 
+    def self.check_connection
+      !!Net::HTTP.new(GITHUB_HOST).head('/')
+    rescue Errno::ENETUNREACH => e
+      raise e, 'There is no connection!'
+    end
+
     def initialize(repo:, base_dir: nil, branches_file: nil, branches: nil)
-      check_connection
+      self.class.check_connection
       @repo = repo || fail(ArgumentError, 'Please specify a valid repository name!')
       @base_dir = base_dir || BASE_DIR
       @branches_file = branches_file || repo_path.join('.branches')
@@ -110,12 +116,6 @@ module GitUtils
       plural = size > 1 ? 'es' : ''
       success "Successfully loaded #{size} branch#{plural}:"
       puts @branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" }
-    end
-
-    def check_connection
-      !!Net::HTTP.new(GITHUB_HOST).head('/')
-    rescue Errno::ENETUNREACH => e
-      error(message: 'There is no connection!', error: e)
     end
   end
 end
