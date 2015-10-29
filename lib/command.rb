@@ -4,7 +4,6 @@ require 'net/http'
 require_relative './prompt'
 
 module GitUtils
-  using Colorize
   class Command
     include Prompt
 
@@ -62,7 +61,7 @@ module GitUtils
           `git checkout #{branch}`
           res = `git pull origin #{branch}`
           `git rebase origin/master`
-          error(message: 'Halting unfinished rebase', error: GitError) { `git rebase --abort` } if unfinished_rebase?
+          error(message: 'Halting unfinished rebase!', error: GitError) { `git rebase --abort` } if unfinished_rebase?
           `git push origin #{branch} -f`
           `git checkout master`
           `git branch -D #{branch}`

@@ -1,10 +1,9 @@
 require_relative 'colorize'
 
 module GitUtils
+  using Colorize
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
-
-    using GitUtils::Colorize
 
     def warning(message:, char: '*')
       spacer = (char * (message.size + 4)).grey
