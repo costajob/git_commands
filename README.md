@@ -56,7 +56,7 @@ Consider after the rabse the branch is pushed to origin with force, so be aware 
 case more than one programmer access the same branche from different computers.
 As the other tasks, it depends on the setup one, so it accepts the same arguments
 ```ruby
-# loads branches from the repo _.branches_ file, repo si located at _HOME/Sites/my_repo_
+# loads branches from the repo .branches file, repo si located at HOME/Sites/my_repo
 rake git_utils:rebase repo=my_repo
 ```
 
@@ -64,7 +64,7 @@ rake git_utils:rebase repo=my_repo
 This command remove all of your branches locally and on origin. A confirmation is asked before the removal.
 Use the same arguments as setup.
 ```ruby
-# purge old branches specified at the coomad line, repo si located at _HOME/Sites/my_repo_
+# purge old branches specified at the command line, repo is located at HOME/Sites/my_repo
 rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 ```
 
@@ -73,6 +73,6 @@ It should be useful to aggregate your branches into a single one in case you wan
 It uses the following naming convention: rb_yyyy_mm_dd
 Use the same arguments as setup.
 ```ruby
-# aggregate branches listed in the _/tmp/to_release file, repo si located at _HOME/Sites/my_repo_
+# aggregate branches listed in the /tmp/to_release file, repo si located at HOME/Sites/my_repo
 rake git_utils:aggregate repo=my_repo branches_file=/tmp/to_release
 ```
