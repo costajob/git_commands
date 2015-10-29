@@ -1,5 +1,6 @@
 require 'pathname'
 require 'fileutils'
+require 'net/http'
 require_relative './prompt'
 
 module GitUtils
@@ -10,10 +11,12 @@ module GitUtils
     class GitError < StandardError; end
     class NoBranchesError < StandardError; end
 
+    GITHUB_HOST = 'github.com'
     BASE_DIR = File.join(ENV['HOME'], 'Sites')
     UNFINISHED_REBASE_FILES = %w(rebase-merge rebase-apply)
 
     def initialize(repo:, base_dir: nil, branches_file: nil, branches: nil)
+      check_connection
       @repo = repo || fail(ArgumentError, 'Please specify a valid repository name!')
       @base_dir = base_dir || BASE_DIR
       @branches_file = branches_file || repo_path.join('.branches')
@@ -51,7 +54,7 @@ module GitUtils
         @branches.each do |branch|
           warning(message: "Rebasing branch: #{branch}")
           `git checkout #{branch}`
-          `git pull origin #{branch}`
+          res = `git pull origin #{branch}`
           `git rebase origin/master`
           error(message: 'Halting unfinished rebase', error: GitError) { `git rebase --abort` } if unfinished_rebase?
           `git push origin #{branch} -f`
@@ -107,6 +110,12 @@ module GitUtils
       plural = size > 1 ? 'es' : ''
       success "Successfully loaded #{size} branch#{plural}:"
       puts @branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" }
+    end
+
+    def check_connection
+      !!Net::HTTP.new(GITHUB_HOST).head('/')
+    rescue Errno::ENETUNREACH => e
+      error(message: 'There is no connection!', error: e)
     end
   end
 end

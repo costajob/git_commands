@@ -9,7 +9,10 @@ describe GitUtils::Command do
   let(:instance) { klass::new(repo: repo, branches: branches.join(',')) }
   let(:branches) { %w[feature/love-me-tender feature/all-shock-up feature/dont-be-cruel] }
   let(:branches_file) { Tempfile.new('branches') << branches.join("\n") }
-  before { branches_file.rewind }
+  before do 
+    stub(klass).check_connection { true }
+    branches_file.rewind
+  end
 
   it 'must define state' do
     %w[base_dir branches_file branches repo].each do |attr|
