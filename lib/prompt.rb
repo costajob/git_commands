@@ -5,6 +5,8 @@ module GitUtils
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 
+    class AbortError < StandardError; end
+
     def warning(message:, char: '*')
       spacer = (char * (message.size + 4)).grey
       puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
@@ -33,7 +35,7 @@ module GitUtils
       when /y/i
         yield
       else
-        error(message: 'Aborting...')
+        error(message: 'Aborted operation!', error: AbortError)
       end
     end
 

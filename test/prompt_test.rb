@@ -29,7 +29,7 @@ describe GitUtils::Prompt do
   %w[n N].each do |answer|
     it 'must abort' do
       stub(instance).input { answer }
-      -> { instance.confirm('Are you sure') }.must_raise StandardError
+      -> { instance.confirm('Are you sure') }.must_raise klass::AbortError
     end
   end
 end
