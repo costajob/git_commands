@@ -50,9 +50,8 @@ module GitUtils
           @branches.each do |branch|
             warning(message: "Rebasing branch: #{branch}")
             `git checkout #{branch}`
-            res = `git pull origin #{branch}`
-            `git rebase origin/master`
-            error(message: 'Halting unfinished rebase!', error: GitError) { `git rebase --abort` } if unfinished_rebase?
+            `git pull origin #{branch}`
+            rebase_with_master
             `git push origin #{branch} -f`
             `git checkout master`
             `git branch -D #{branch}`
@@ -68,8 +67,9 @@ module GitUtils
         enter_repo do
           `git branch #{aggregate_name}`
           @branches.each do |branch|
+            warning(message: "Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            `git rebase origin/master`
+            rebase_with_master
             `git rebase #{aggregate_name}`
             `git checkout #{aggregate_name}`
             `git merge #{temp}`
@@ -104,14 +104,19 @@ module GitUtils
       puts @branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" } + ['']
     end
 
-    def align_master
+    def pull_master
       `git checkout master`
       `git pull`
     end
 
+    def rebase_with_master
+      `git rebase origin/master`
+      error(message: 'Halting unfinished rebase!', error: GitError) { `git rebase --abort` } if unfinished_rebase?
+    end
+
     def enter_repo
       Dir.chdir repo_path do
-        align_master
+        pull_master
         yield
       end
     end
