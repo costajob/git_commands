@@ -4,7 +4,7 @@ Utility library to work with remote repositories listed inside plain files.
 
 ## Table of Contents
 * [Workflow](#workflow)
-* [Utility](#utility)
+* [Scope](#scope)
 * [Prerequisites](#prerequisites)
 * [Tasks](#tasks)
   * [setup](#setup)
@@ -21,8 +21,8 @@ This script will facilitate adopting a subset of the branch-featuring workflow c
 * **pushing with force** on local branches is not an issue
 * **release** branches are created **aggregating multiple branches** into a new one
 
-## Utility
-This script will help you in the following cases:
+## Scope
+The scope of this is helping out in the following cases:
 * you have multiple feature branches waiting for release due to some reason (i.e. long QA time...), and need to keep them aligned with master
 * you need to quickly aggregate branches for a release
 
@@ -33,7 +33,7 @@ You need **Ruby >= 2.1** and **rake >= 10.0**, further than **GIT >= 1.7**
 Here are the main tasks:
 
 ### setup
-The scope of the library is to automate branches fetching, this action happens in two ways:
+The core of the library is automating multiple branches fetching, this action happens in two concurrent ways:
 1. from the command line, by splitting a comma separated list
 2. by reading a file where names are listed on each line
 In case **no branches** are fetched the **script halts**.
@@ -52,8 +52,9 @@ Here are the arguments list:
 
 ### rebase
 This is probably the most useful command in case you have several branch to rebase with _origin/master_ frequently.
-Consider after the rabse the branch is pushed to origin with force, so be aware in
-case more than one programmer access the same branche from different computers.
+Consider after the rebase the branch is pushed to origin with force, so be aware in case more than one programmer access the same branche from different computers.  
+A confirmation is asked to continue.  
+
 As the other tasks, it depends on the setup one, so it accepts the same arguments
 ```ruby
 # loads branches from the repo .branches file, repo si located at HOME/Sites/my_repo
@@ -61,7 +62,8 @@ rake git_utils:rebase repo=my_repo
 ```
 
 ### purge
-This command remove all of your branches locally and on origin. A confirmation is asked before the removal.
+This command remove all of your branches locally and on origin.  
+A confirmation is asked before each branch local and remote removals.  
 Use the same arguments as setup.
 ```ruby
 # purge old branches specified at the command line, repo is located at HOME/Sites/my_repo
@@ -69,8 +71,9 @@ rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 ```
 
 ### aggregate
-It should be useful to aggregate your branches into a single one in case you want to create a release branch.
-It uses the following naming convention: rb_yyyy_mm_dd
+It should be useful to aggregate your branches into a single one in case you want to create a release branch.  
+It uses the following naming convention: rb_yyyy_mm_dd  
+A confirmation is asked to continue.  
 Use the same arguments as setup.
 ```ruby
 # aggregate branches listed in the /tmp/to_release file, repo si located at HOME/Sites/my_repo
