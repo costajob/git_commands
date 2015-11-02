@@ -51,7 +51,7 @@ This is probably the most useful command in case you have several branch to reba
 Consider after the rebase the branch is pushed to origin with force, so be aware in case more than one programmer access the same branch from different computers.  
 A confirmation is asked to continue.  
 
-As the other tasks, it depends on the setup one, so it accepts the same arguments
+As the other tasks, it depends on the setup one, so it accepts the same arguments:
 ```ruby
 # loads branches from the repo .branches file, repo si located at HOME/Sites/my_repo
 rake git_utils:rebase repo=my_repo
@@ -60,7 +60,7 @@ rake git_utils:rebase repo=my_repo
 ### purge
 This command remove the specified branches locally and remotely.  
 A confirmation is asked before each removal.  
-It uses the same arguments as setup.
+It uses the same arguments as setup:
 ```ruby
 # purge old branches specified at the command line, repo is located at HOME/Sites/my_repo
 rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
@@ -70,7 +70,7 @@ rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 It should be useful to aggregate your branches into a single one in case you want to create a release branch.  
 It uses the following naming convention: rb_yyyy_mm_dd  
 A confirmation is asked to continue.  
-It uses the same arguments as setup.
+It uses the same arguments as setup:
 ```ruby
 # aggregate branches listed in the /tmp/to_release file, repo si located at HOME/Sites/my_repo
 rake git_utils:aggregate repo=my_repo branches_file=/tmp/to_release
