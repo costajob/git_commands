@@ -22,7 +22,7 @@ module GitUtils
 
     def initialize(repo:, base_dir: nil, branches_file: nil, branches: nil)
       self.class.check_connection
-      @repo = repo || fail(ArgumentError, 'Please specify a valid repository name!')
+      @repo = repo || error(message: 'Please specify a valid repository name!', error: ArgumentError)
       @base_dir = base_dir || BASE_DIR
       @branches_file = branches_file || repo_path.join('.branches')
       @branches = branches.to_s.split(',') + fetch_branches
