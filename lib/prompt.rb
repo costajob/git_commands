@@ -12,11 +12,6 @@ module GitUtils
       puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
     end
 
-    def ask(message)
-      print message.cyan
-      input
-    end
-
     def error(message:, error: StandardError)
       puts message.to_s.red
       yield if block_given?
@@ -39,7 +34,14 @@ module GitUtils
       end
     end
 
-    private def input
+    private 
+    
+    def ask(message)
+      print message.cyan
+      input
+    end
+
+    def input
       STDIN.gets.chomp
     end
   end

@@ -1,7 +1,3 @@
-git_utils
-===========
-Utility library to work with remote repositories listed inside plain files. 
-
 ## Table of Contents
 * [Workflow](#workflow)
 * [Scope](#scope)
@@ -33,9 +29,9 @@ You need **Ruby >= 2.1** and **rake >= 10.0**, further than **GIT >= 1.7**
 Here are the main tasks:
 
 ### setup
-The core of the library is automating multiple branches fetching, this action happens in two concurrent ways:
-1. from the command line, by splitting a comma separated list
-2. by reading a file where names are listed on each line
+The core of the library is automating multiple branches fetching, this action happens in two concurrent ways:  
+* from the command line, by splitting a comma separated list
+* by reading a file where names are listed on each line
 In case **no branches** are fetched the **script halts**.
 
 Is also assumed you're pointing to a project directory somewhere, so the script could move in and execute the GIT commands for you.
@@ -52,7 +48,7 @@ Here are the arguments list:
 
 ### rebase
 This is probably the most useful command in case you have several branch to rebase with _origin/master_ frequently.
-Consider after the rebase the branch is pushed to origin with force, so be aware in case more than one programmer access the same branche from different computers.  
+Consider after the rebase the branch is pushed to origin with force, so be aware in case more than one programmer access the same branch from different computers.  
 A confirmation is asked to continue.  
 
 As the other tasks, it depends on the setup one, so it accepts the same arguments
@@ -62,9 +58,9 @@ rake git_utils:rebase repo=my_repo
 ```
 
 ### purge
-This command remove all of your branches locally and on origin.  
-A confirmation is asked before each branch local and remote removals.  
-Use the same arguments as setup.
+This command remove the specified branches locally and remotely.  
+A confirmation is asked before each removal.  
+It uses the same arguments as setup.
 ```ruby
 # purge old branches specified at the command line, repo is located at HOME/Sites/my_repo
 rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
@@ -74,7 +70,7 @@ rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 It should be useful to aggregate your branches into a single one in case you want to create a release branch.  
 It uses the following naming convention: rb_yyyy_mm_dd  
 A confirmation is asked to continue.  
-Use the same arguments as setup.
+It uses the same arguments as setup.
 ```ruby
 # aggregate branches listed in the /tmp/to_release file, repo si located at HOME/Sites/my_repo
 rake git_utils:aggregate repo=my_repo branches_file=/tmp/to_release

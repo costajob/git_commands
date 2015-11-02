@@ -13,12 +13,6 @@ describe GitUtils::Prompt do
     refute instance.success('i win!')
   end
 
-  it 'must respond to ask ' do
-    res = 'blue suede shoes'
-    stub(instance).input { res }
-    instance.ask('What is your Elvis favorite song?').must_equal res
-  end
-
   %w[y Y].each do |answer|
     it 'must confirm question' do
       stub(instance).input { answer }
