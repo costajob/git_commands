@@ -101,7 +101,7 @@ module GitUtils
       size = @branches.to_a.size
       plural = size > 1 ? 'es' : ''
       success "Successfully loaded #{size} branch#{plural}:"
-      puts @branches.each_with_index.map { |branch, i| "#{i+1}. #{branch}" } + ['']
+      puts @branches.each_with_index.map { |branch, i| "#{(i+1).to_s.rjust(2, '0')}. #{branch}" } + ['']
     end
 
     def pull_master
