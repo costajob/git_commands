@@ -25,7 +25,8 @@ module GitUtils
       @repo = repo || error(message: 'Please specify a valid repository name!', error: ArgumentError)
       @base_dir = base_dir || BASE_DIR
       @branches_file = branches_file || repo_path.join('.branches')
-      @branches = branches.to_s.split(',') + fetch_branches
+      @branches = branches.to_s.split(',')
+      fetch_branches
       check_branches
     end
 
@@ -87,9 +88,9 @@ module GitUtils
     end
 
     def fetch_branches
-      return [] unless File.exist?(@branches_file)
+      return unless @branches.empty? && File.exist?(@branches_file)
       warning(message: 'Loading branches file')
-      File.foreach(@branches_file).map(&:strip)
+      @branches = File.foreach(@branches_file).map(&:strip)
     end
 
     def check_branches

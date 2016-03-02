@@ -44,7 +44,7 @@ Here are the arguments list:
 * **repo**: the repository name you want to automate git commant to
 * **base_dir**: the base path to your GIT repo, excluding its name (specified eralier). It defaults to HOME/Sites
 * **branches_file**: the path to the file, if any, listing the branches names. It defaults to the **.branches** file inside of your repo path (you need to add it to the .gitignore then)
-* **branches**: a list of branches separated by comma (optional)
+* **branches**: a list of branches separated by comma (optional), if specified it has precedence over the branches_file
 
 ### rebase
 This is probably the most useful command in case you have several branch to rebase with _origin/master_ frequently.

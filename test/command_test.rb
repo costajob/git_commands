@@ -37,6 +37,12 @@ describe GitUtils::Command do
     instance.instance_variable_get(:@branches).must_equal branches
   end
 
+  it 'must fetch branches from argument only' do
+    branches = %w[feature/return-to-sender feature/teddy-bear]
+    instance = klass::new(repo: repo, branches: branches.join(","), branches_file: branches_file.path)
+    instance.instance_variable_get(:@branches).must_equal branches
+  end
+
   describe 'git commands' do
     let(:pwd) { File.expand_path('../..', __FILE__) }
     let(:instance) { klass::new(repo: 'test', base_dir: pwd, branches: branches.join(',')) }
