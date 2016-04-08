@@ -10,12 +10,13 @@ module GitUtils
       grey: 37
     }
 
-    refine String do
-      CODES.each do |message, code|
-        define_method(message) do
-          "\e[#{code}m#{self}\e[0m"
-        end
-      end
+  end
+end
+
+String.instance_eval do
+  GitUtils::Colorize::CODES.each do |message, code|
+    define_method(message) do
+      "\e[#{code}m#{self}\e[0m"
     end
   end
 end

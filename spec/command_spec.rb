@@ -1,5 +1,5 @@
-require 'test_helper'
-require_relative '../lib/command'
+require 'spec_helper'
+require 'git_utils/command'
 
 def `(command); command; end
 
@@ -45,7 +45,7 @@ describe GitUtils::Command do
 
   describe 'git commands' do
     let(:pwd) { File.expand_path('../..', __FILE__) }
-    let(:instance) { klass::new(repo: 'test', base_dir: pwd, branches: branches.join(',')) }
+    let(:instance) { klass::new(repo: 'spec', base_dir: pwd, branches: branches.join(',')) }
     before { stub(instance).input { 'Y' } }
 
     it 'must remove local and remote branches' do
@@ -53,7 +53,7 @@ describe GitUtils::Command do
     end
 
     it 'must raise an error when trying to remove master' do
-      instance = klass::new(repo: 'test', base_dir: pwd, branches: 'master')
+      instance = klass::new(repo: 'spec', base_dir: pwd, branches: 'master')
       -> { instance.purge }.must_raise klass::GitError
     end
 

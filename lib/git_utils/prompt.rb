@@ -1,18 +1,17 @@
-require_relative 'colorize'
+require 'git_utils/colorize'
 
 module GitUtils
-  using Colorize
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 
     class AbortError < StandardError; end
 
-    def warning(message:, char: '*')
+    def warning(message, char = '*')
       spacer = (char * (message.size + 4)).grey
       puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
     end
 
-    def error(message:, error: StandardError)
+    def error(message, error = StandardError)
       puts message.to_s.red
       yield if block_given?
       fail error, message
@@ -30,7 +29,7 @@ module GitUtils
       when /y/i
         yield
       else
-        error(message: 'Aborted operation!', error: AbortError)
+        error('Aborted operation!', AbortError)
       end
     end
 

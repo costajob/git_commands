@@ -1,5 +1,5 @@
-require 'test_helper'
-require_relative '../lib/prompt'
+require 'spec_helper'
+require 'git_utils/prompt'
 
 describe GitUtils::Prompt do
   let(:klass) { class Mock; include GitUtils::Prompt; end }

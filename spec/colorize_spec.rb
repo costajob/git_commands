@@ -1,5 +1,5 @@
-require 'test_helper'
-require_relative '../lib/colorize'
+require 'spec_helper'
+require 'git_utils/colorize'
 
 using GitUtils::Colorize
 

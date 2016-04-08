@@ -1,4 +1,4 @@
-require_relative '../lib/command'
+require 'git_utils/command'
 
 namespace :git_utils do
   desc <<END
