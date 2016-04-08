@@ -23,7 +23,7 @@ The scope of this is helping out in the following cases:
 * you need to quickly aggregate branches for a release
 
 ## Prerequisites
-You need **Ruby >= 2.1** and **rake >= 10.0**, further than **GIT >= 1.7**
+I assume you have GIT installed ;)
 
 ## Tasks
 Here are the main tasks:
