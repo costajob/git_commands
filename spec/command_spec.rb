@@ -21,11 +21,11 @@ describe GitUtils::Command do
   end
 
   it 'must raise an error if no valid repo is specified' do
-    -> { klass::new }.must_raise ArgumentError
+    Proc::new { klass::new }.must_raise ArgumentError
   end
 
   it 'must raise an error if no branches are fetched' do
-    -> { klass::new(:repo => repo) }.must_raise klass::NoBranchesError
+    Proc::new { klass::new(:repo => repo) }.must_raise klass::NoBranchesError
   end
 
   it 'must return single element array when branch is defined' do
@@ -54,7 +54,7 @@ describe GitUtils::Command do
 
     it 'must raise an error when trying to remove master' do
       instance = klass::new(:repo => 'spec', :base_dir => pwd, :branches => 'master')
-      -> { instance.purge }.must_raise klass::GitError
+      Proc::new { instance.purge }.must_raise klass::GitError
     end
 
     it 'must rebase with master' do
@@ -63,7 +63,7 @@ describe GitUtils::Command do
 
     it 'must raise an error for unfinished rebase' do
       stub(instance).unfinished_rebase? { true }
-      -> { instance.rebase }.must_raise klass::GitError
+      Proc::new { instance.rebase }.must_raise klass::GitError
     end
 
     it 'must aggregate branches into a single one' do
