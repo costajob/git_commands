@@ -6,7 +6,7 @@ describe GitUtils::Prompt do
   let(:instance) { klass::new }
 
   it 'must print a warning' do
-    refute instance.warning(message: "should print the warning")
+    refute instance.warning(:message => "should print the warning")
   end
 
   it 'must print success message' do

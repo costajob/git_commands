@@ -6,7 +6,7 @@ def `(command); command; end
 describe GitUtils::Command do
   let(:klass) { GitUtils::Command }
   let(:repo) { 'elvis-greatest-hits' }
-  let(:instance) { klass::new(repo: repo, branches: branches.join(',')) }
+  let(:instance) { klass::new(:repo => repo, :branches => branches.join(',')) }
   let(:branches) { %w[feature/love-me-tender feature/all-shock-up feature/dont-be-cruel] }
   let(:branches_file) { Tempfile.new('branches') << branches.join("\n") }
   before do
@@ -21,11 +21,11 @@ describe GitUtils::Command do
   end
 
   it 'must raise an error if no valid repo is specified' do
-    -> { klass::new(repo: nil) }.must_raise ArgumentError
+    -> { klass::new }.must_raise ArgumentError
   end
 
   it 'must raise an error if no branches are fetched' do
-    -> { klass::new(repo: repo) }.must_raise klass::NoBranchesError
+    -> { klass::new(:repo => repo) }.must_raise klass::NoBranchesError
   end
 
   it 'must return single element array when branch is defined' do
@@ -33,19 +33,19 @@ describe GitUtils::Command do
   end
 
   it 'must fetch branches from file' do
-    instance = klass::new(repo: repo, branches_file: branches_file.path)
+    instance = klass::new(:repo => repo, :branches_file => branches_file.path)
     instance.instance_variable_get(:@branches).must_equal branches
   end
 
   it 'must fetch branches from argument only' do
     branches = %w[feature/return-to-sender feature/teddy-bear]
-    instance = klass::new(repo: repo, branches: branches.join(","), branches_file: branches_file.path)
+    instance = klass::new(:repo => repo, :branches => branches.join(","), :branches_file => branches_file.path)
     instance.instance_variable_get(:@branches).must_equal branches
   end
 
   describe 'git commands' do
     let(:pwd) { File.expand_path('../..', __FILE__) }
-    let(:instance) { klass::new(repo: 'spec', base_dir: pwd, branches: branches.join(',')) }
+    let(:instance) { klass::new(:repo => 'spec', :base_dir => pwd, :branches => branches.join(',')) }
     before { stub(instance).input { 'Y' } }
 
     it 'must remove local and remote branches' do
@@ -53,7 +53,7 @@ describe GitUtils::Command do
     end
 
     it 'must raise an error when trying to remove master' do
-      instance = klass::new(repo: 'spec', base_dir: pwd, branches: 'master')
+      instance = klass::new(:repo => 'spec', :base_dir => pwd, :branches => 'master')
       -> { instance.purge }.must_raise klass::GitError
     end
 

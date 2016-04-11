@@ -1,8 +1,6 @@
 require 'spec_helper'
 require 'git_utils/colorize'
 
-using GitUtils::Colorize
-
 describe GitUtils::Colorize do
   let(:klass) { GitUtils::Colorize }
   let(:instance) { 'colorize me!' }
