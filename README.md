@@ -1,8 +1,8 @@
 ## Table of Contents
 * [Workflow](#workflow)
 * [Scope](#scope)
-* [Prerequisites](#prerequisites)
-* [Tasks](#tasks)
+* [Installation](#installation)
+* [Usage](#usage)
   * [setup](#setup)
   * [rebase](#rebase)
   * [purge](#purge)
@@ -22,11 +22,13 @@ The scope of this is helping out in the following cases:
 * you have multiple feature branches waiting for release due to some reason (i.e. long QA time...), and need to keep them aligned with master
 * you need to quickly aggregate branches for a release
 
-## Prerequisites
-I assume you have GIT installed ;)
+## Installation
+I assume you have GIT installed ;)  
+You will probably use this gem standalone, since i see no use in including it into another project.  
+Just clone the Github repository, move to the gem directory and start using rake tasks.
 
-## Tasks
-Here are the main tasks:
+## Usage
+Here are the main Rake tasks:
 
 ### setup
 The core of the library is automating multiple branches fetching, this action happens in two concurrent ways:  
