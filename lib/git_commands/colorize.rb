@@ -1,4 +1,4 @@
-module GitUtils
+module GitCommands
   module Colorize
     CODES = {
       :red => 31,
@@ -14,7 +14,7 @@ module GitUtils
 end
 
 String.instance_eval do
-  GitUtils::Colorize::CODES.each do |message, code|
+  GitCommands::Colorize::CODES.each do |message, code|
     define_method(message) do
       "\e[#{code}m#{self}\e[0m"
     end

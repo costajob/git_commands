@@ -1,6 +1,6 @@
-require 'git_utils/colorize'
+require 'git_commands/colorize'
 
-module GitUtils
+module GitCommands
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 

@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'git_utils/prompt'
+require 'git_commands/prompt'
 
-describe GitUtils::Prompt do
-  let(:klass) { class Mock; include GitUtils::Prompt; end }
+describe GitCommands::Prompt do
+  let(:klass) { class Mock; include GitCommands::Prompt; end }
   let(:instance) { klass::new }
 
   it 'must print a warning' do

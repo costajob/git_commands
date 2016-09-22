@@ -1,9 +1,9 @@
 require 'pathname'
 require 'fileutils'
 require 'net/http'
-require 'git_utils/prompt'
+require 'git_commands/prompt'
 
-module GitUtils
+module GitCommands
   class Command
     include Prompt
 

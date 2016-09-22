@@ -1,10 +1,10 @@
 require 'spec_helper'
-require 'git_utils/command'
+require 'git_commands/command'
 
 def `(command); command; end
 
-describe GitUtils::Command do
-  let(:klass) { GitUtils::Command }
+describe GitCommands::Command do
+  let(:klass) { GitCommands::Command }
   let(:repo) { 'elvis-greatest-hits' }
   let(:instance) { klass::new(:repo => repo, :branches => branches.join(',')) }
   let(:branches) { %w[feature/love-me-tender feature/all-shock-up feature/dont-be-cruel] }

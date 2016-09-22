@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'git_utils/version'
+require 'git_commands/version'
 
 Gem::Specification.new do |s|
-  s.name = "git_utils"
-  s.version = GitUtils::VERSION
+  s.name = "git_commands"
+  s.version = GitCommands::VERSION
   s.authors = ["costajob"]
   s.email = ["costajob@gmail.com"]
   s.summary = "Utility library to rebase and aggregate your project branches"
-  s.homepage = "https://github.com/costajob/git_utils.git"
+  s.homepage = "https://github.com/costajob/git_commands.git"
   s.license = "MIT"
   s.required_ruby_version = ">= 1.9.2"
 

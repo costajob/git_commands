@@ -40,7 +40,7 @@ Is also assumed you're pointing to a project directory somewhere, so the script 
 
 To call this task with arguments call it like that:
 ```ruby
-rake git_utils:setup repo=git_repository base_dir=repo_path branches_file=file_listing_branches branches=list,of,branches,separated,by,comma
+rake git_commands:setup repo=git_repository base_dir=repo_path branches_file=file_listing_branches branches=list,of,branches,separated,by,comma
 ```
 Here are the arguments list:
 * **repo**: the repository name you want to automate git commant to
@@ -56,7 +56,7 @@ A confirmation is asked to continue.
 As the other tasks, it depends on the setup one, so it accepts the same arguments:
 ```ruby
 # loads branches from the repo .branches file, repo si located at HOME/Sites/my_repo
-rake git_utils:rebase repo=my_repo
+rake git_commands:rebase repo=my_repo
 ```
 
 ### purge
@@ -65,7 +65,7 @@ A confirmation is asked before each removal.
 It uses the same arguments as setup:
 ```ruby
 # purge old branches specified at the command line, repo is located at HOME/Sites/my_repo
-rake git_utils:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
+rake git_commands:purge repo=my_repo branches=old_branch,older_branch,oldest_branch
 ```
 
 ### aggregate
@@ -75,5 +75,5 @@ A confirmation is asked to continue.
 It uses the same arguments as setup:
 ```ruby
 # aggregate branches listed in the /tmp/to_release file, repo si located at HOME/Sites/my_repo
-rake git_utils:aggregate repo=my_repo branches_file=/tmp/to_release
+rake git_commands:aggregate repo=my_repo branches_file=/tmp/to_release
 ```

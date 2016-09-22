@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'git_utils/colorize'
+require 'git_commands/colorize'
 
-describe GitUtils::Colorize do
-  let(:klass) { GitUtils::Colorize }
+describe GitCommands::Colorize do
+  let(:klass) { GitCommands::Colorize }
   let(:instance) { 'colorize me!' }
 
   it 'must respond to dynamic methods' do
