@@ -2,3 +2,4 @@
 /.bundle/
 .branches
 Gemfile.lock
+*.gem

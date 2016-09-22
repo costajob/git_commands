@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/costajob/git_utils.git"
   s.license = "MIT"
   s.required_ruby_version = ">= 1.9.2"
+
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec|s|features)/}) }
   s.bindir = "exe"
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
