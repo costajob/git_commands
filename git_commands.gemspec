@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.summary = "Utility library to rebase and aggregate your project branches"
   s.homepage = "https://github.com/costajob/git_commands.git"
   s.license = "MIT"
-  s.required_ruby_version = ">= 1.9.2"
+  s.required_ruby_version = ">= 2.1.8"
 
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec|s|features)/}) }
-  s.bindir = "exe"
-  s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  s.bindir = "bin"
+  s.executables = %w[rebase aggregate purge]
   s.require_paths = ["lib"]
 
   s.add_development_dependency "bundler", "~> 1.11"

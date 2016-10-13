@@ -1,24 +1,29 @@
-require 'git_commands/colorize'
+require "git_commands/colorize"
 
 module GitCommands
+  using Colorize
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 
     class AbortError < StandardError; end
 
-    def warning(message, char = '*')
+    def out
+      @out ||= STDOUT
+    end
+
+    def warning(message, char = "*")
       spacer = (char * (message.size + 4)).grey
-      puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
+      out.puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
     end
 
     def error(message, error = StandardError)
-      puts message.to_s.red
+      out.puts message.to_s.red
       yield if block_given?
       fail error, message
     end
 
     def success(message)
-      puts message.to_s.green
+      out.puts message.to_s.green
     end
 
     def confirm(message)
@@ -29,14 +34,14 @@ module GitCommands
       when /y/i
         yield
       else
-        error('Aborted operation!', AbortError)
+        error("Aborted operation!", AbortError)
       end
     end
 
     private 
     
     def ask(message)
-      print message.cyan
+      out.print message.cyan
       input
     end
 
