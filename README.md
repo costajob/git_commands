@@ -24,7 +24,7 @@ The scope of this is helping out in the following cases:
 I assume you have GIT installed ;)  
 Just install the gem to use the binaries commands.
 ```
-`gem isntall git_commands
+gem isntall git_commands
 ```
 
 ## Usage
