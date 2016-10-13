@@ -14,17 +14,13 @@ describe GitCommands::Prompt do
     instance.out.string.must_equal "\e[32mi win!\e[0m\n"
   end
 
-  %w[y Y].each do |answer|
-    it "must confirm question" do
-      stub(instance).input { answer }
-      assert instance.confirm("Are you sure") { true }
-    end
+  it "must confirm question" do
+    def instance.input; "y"; end
+    assert instance.confirm("Are you sure") { true }
   end
 
-  %w[n N].each do |answer|
-    it "must abort" do
-      stub(instance).input { answer }
-      Proc::new { instance.confirm("Are you sure") }.must_raise klass::AbortError
-    end
+  it "must abort" do
+    def instance.input; "n"; end
+    Proc::new { instance.confirm("Are you sure") }.must_raise klass::AbortError
   end
 end

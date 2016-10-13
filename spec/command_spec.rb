@@ -12,7 +12,7 @@ describe GitCommands::Command do
 
   before do
     branches_file.rewind
-    stub(klass).check_connection { true }
+    def klass.check_connection; true; end
   end
 
   it "must raise an error if no valid repo is specified" do
@@ -31,7 +31,7 @@ describe GitCommands::Command do
   describe "git commands" do
     let(:repo) { File.expand_path("../../spec", __FILE__) }
     let(:instance) { klass.new(repo: repo, branches: branches.join(","), out: out) }
-    before { stub(instance).input { "Y" } }
+    before { def instance.input; "Y"; end }
 
     it "must remove local and remote branches" do
       instance.purge.must_equal branches
@@ -47,7 +47,7 @@ describe GitCommands::Command do
     end
 
     it "must raise an error for unfinished rebase" do
-      stub(instance).unfinished_rebase? { true }
+      def instance.unfinished_rebase?; true; end
       Proc.new { instance.rebase }.must_raise klass::GitError
     end
 
