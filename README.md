@@ -3,7 +3,7 @@
 * [Scope](#scope)
 * [Installation](#installation)
 * [Usage](#usage)
-  * [setup](#setup)
+  * [Help](#help)
   * [rebase](#rebase)
   * [purge](#purge)
   * [aggregate](#aggregate)
