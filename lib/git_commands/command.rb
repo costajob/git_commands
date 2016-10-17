@@ -20,21 +20,28 @@ module GitCommands
       raise e, "There is no connection!"
     end
 
+    def self.git_repo?(repo)
+      `git rev-parse --is-inside-work-tree 2> /dev/null`.strip == "true"
+    end
+
+    def self.valid_branch?(branch)
+      `git rev-parse --verify origin/#{branch} 2> /dev/null`.match(/^[0-9a-z]+/)
+    end
+
     attr_reader :out
 
     def initialize(repo:, branches:, out: STDOUT)
       self.class.check_connection
       @out = out
       @repo = fetch_repo(repo)
-      @branches = fetch_branches(branches)
+      @branches = fetch_branches(String(branches))
       @timestamp = Time.new.strftime("%Y-%m-%d")
-      check_branches
+      print_branches
     end
 
     def purge
       enter_repo do
         @branches.each do |branch|
-          error("Trying ro remove master!", GitError) if branch == "master"
           warning("Removing branch: #{branch}")
           confirm("Remove local branch") do
             `git branch -D #{branch}`
@@ -77,6 +84,7 @@ module GitCommands
             `git checkout #{aggregate}`
             `git merge #{temp}`
             `git branch -d #{temp}`
+            `git checkout master`
           end      
         end
         success "#{aggregate} branch created"
@@ -84,19 +92,36 @@ module GitCommands
     end
 
     private def fetch_repo(repo)
-      return Pathname::new(repo) if File.exist?(repo)
-      fail NoentRepositoryError, "#{repo} is not a valid GIT repository!" 
+      fail NoentRepositoryError, "'#{repo}' is not a valid GIT repository!" unless valid_repo?(repo)
+      Pathname::new(repo)
     end
 
-    private def check_branches
-      error("No branches have been loaded!", NoBranchesError) if @branches.empty?
-      print_branches
+    private def valid_repo?(repo)
+      return false unless File.directory?(repo)
+      Dir.chdir(repo) do
+        self.class.git_repo?(repo)
+      end
     end
 
-    private def fetch_branches(branches)
+    private def fetch_branches(src)
       warning("Loading branches file")
-      return File.foreach(branches).map(&:strip) if File.exist?(branches)
-      branches.to_s.split(",").map(&:strip) 
+      branches = File.foreach(src).map(&:strip) if valid_file?(src)
+      branches ||= src.split(",").map(&:strip) 
+      branches.tap do |list|
+        fail(NoBranchesError, "No branches have been loaded!") if list.empty?
+        list.each { |branch| check_branch(branch) }
+      end
+    end
+
+    private def check_branch(branch)
+      Dir.chdir(@repo) do
+        fail(GitError, "Master branch cannot be included into commands operations!") if branch == "master"
+        fail(GitError, "Branch '#{branch}' does not exist!") unless self.class.valid_branch?(branch)
+      end
+    end
+
+    private def valid_file?(branches)
+      File.exist?(branches) && !File.directory?(branches)
     end
 
     private def print_branches
@@ -113,7 +138,10 @@ module GitCommands
 
     private def rebase_with_master
       `git rebase origin/master`
-      error("Halting unfinished rebase!", GitError) { `git rebase --abort` } if unfinished_rebase?
+      if unfinished_rebase?
+        `git rebase --abort`
+        fail(GitError, "Halting unfinished rebase!")
+      end
     end
 
     private def enter_repo

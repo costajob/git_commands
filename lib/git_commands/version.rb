@@ -1,3 +1,3 @@
 module GitCommands
-  VERSION = "3.0.5"
+  VERSION = "3.1.5"
 end

@@ -5,23 +5,19 @@ module GitCommands
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 
+    class AbortError < StandardError; end
+
     def out
       @out ||= STDOUT
     end
 
-    def warning(message, char = "*")
-      spacer = (char * (message.size + 4)).grey
-      out.puts "\n", spacer, "#{char} #{message.to_s.yellow} #{char}", spacer, "\n"
-    end
-
-    def error(message, error = StandardError)
-      out.puts message.to_s.red
-      yield if block_given?
-      fail error, message
+    def warning(message)
+      out.puts "\n#{message}...".yellow
     end
 
     def success(message)
       out.puts message.to_s.green
+      true
     end
 
     def confirm(message)
@@ -32,23 +28,21 @@ module GitCommands
       when /y/i
         yield
       else
-        abort!("Aborted operation!")
+        fail(AbortError, "Aborted operation!")
       end
     end
 
-    private 
-    
-    def ask(message)
-      out.print message.cyan
-      input
-    end
-
-    def abort!(message)
+    def error(message)
       out.puts message.to_s.red
       exit
     end
 
-    def input
+    private def ask(message)
+      out.print message.cyan
+      input
+    end
+
+    private def input
       STDIN.gets.chomp
     end
   end

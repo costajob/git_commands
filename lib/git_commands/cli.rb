@@ -3,6 +3,8 @@ require "git_commands/command"
 
 module GitCommands
   class CLI
+    include Prompt
+
     VALID_COMMANDS = %w[rebase aggregate purge]
 
     class UnknownCommandError < ArgumentError; end
@@ -20,6 +22,8 @@ module GitCommands
       parser.parse!(@args)
       command = @command_klass.new(repo: @repo, branches: @branches)
       command.send(@command_name)
+    rescue StandardError => e
+      error(e.message)  
     end
 
     private def create_command
