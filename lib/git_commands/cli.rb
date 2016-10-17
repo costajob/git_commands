@@ -43,7 +43,7 @@ module GitCommands
           @repo = repo
         end
 
-        opts.on("-bBRANCHES", "--branches=BRANCHES", "The comma-separated list of branches or the path to a .branches files") do |branches|
+        opts.on("-bBRANCHES", "--branches=BRANCHES", "The comma-separated list of branches or the path to a file listing branches names on each line") do |branches|
           @branches = branches
         end
 

@@ -25,7 +25,7 @@ describe GitCommands::CLI do
     begin
       cli.call
     rescue SystemExit
-      out.string.must_equal "Usage: rebase --repo=./Sites/oro --branches=feature/add_bin,fetaure/remove_rake_task\n    -r, --repo=REPO                  The path to the existing GIT repository\n    -b, --branches=BRANCHES          The comma-separated list of branches or the path to a .branches files\n    -h, --help                       Prints this help\n"
+      out.string.must_equal "Usage: rebase --repo=./Sites/oro --branches=feature/add_bin,fetaure/remove_rake_task\n    -r, --repo=REPO                  The path to the existing GIT repository\n    -b, --branches=BRANCHES          The comma-separated list of branches or the path to a file listing branches names on each line\n    -h, --help                       Prints this help\n"
     end
   end
 end
