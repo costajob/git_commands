@@ -16,7 +16,7 @@ This script will facilitate adopting a subset of the branch-featuring workflow c
 * **release** branches are created **aggregating multiple branches** into a new one
 
 ## Scope
-The scope of this is helping out in the following cases:
+The scope of this gem is helping out in the following cases:
 * you have multiple feature branches waiting for release due to some reason (i.e. long QA time...), and need to keep them aligned with master
 * you need to quickly aggregate branches for a release
 
@@ -24,14 +24,14 @@ The scope of this is helping out in the following cases:
 I assume you have GIT installed ;)  
 Just install the gem to use the binaries commands.
 ```
-gem isntall git_commands
+gem install git_commands
 ```
 
 ## Usage
 Here are the main commands:
 
 ### Help
-Each command has an help option that can be displayed:
+Each command come with a help option that can be displayed:
 
 ```
 rebase --help
@@ -43,13 +43,20 @@ Usage: rebase --repo=./Sites/oro --branches=feature/add_bin,fetaure/remove_rake_
 
 ### rebase
 This is probably the most useful command in case you have several branches to rebase with _origin/master_ frequently.
-A confirmation is asked to continue.  
+A confirmation is asked to before rebasing.  
 
 ```
 rebase --repo=~/Sites/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
 ```
 
-You can also specify as the *branches* the path to a file containing multiple branches on each line:
+You can also specify as the *branches* argument a path to a file containing the branches names on each line, like this:
+
+```txt
+feature/love_me_tender
+feature/teddybear
+feature/return_to_sender
+feature/in_the_ghetto
+```
 
 ```
 rebase --repo=~/Sites/greatest_hits --branches=~/greatest_hits/.branches
@@ -57,7 +64,7 @@ rebase --repo=~/Sites/greatest_hits --branches=~/greatest_hits/.branches
 
 ### purge
 This command remove the specified branches locally and remotely.  
-A confirmation is asked before each removal.  
+A confirmation is asked before removal.  
 
 ```
 purge --repo=~/temp/top_20 --branches=release/in_the_ghetto
@@ -66,7 +73,7 @@ purge --repo=~/temp/top_20 --branches=release/in_the_ghetto
 ### aggregate
 It should be useful to aggregate your branches into a single one in case you want to create a release branch.  
 It uses the following naming convention: *release/yyyy_mm_dd*  
-A confirmation is asked to continue.  
+A confirmation is asked before aggregating.  
 
 ```
 aggregate --repo=~/Sites/greatest_hits --branches=~/greatest_hits/.branches
