@@ -21,6 +21,10 @@ describe GitCommands::Prompt do
 
   it "must abort" do
     def instance.input; "n"; end
-    Proc::new { instance.confirm("Are you sure") }.must_raise klass::AbortError
+    begin
+      instance.confirm("Are you sure")
+    rescue SystemExit
+      instance.out.string.must_equal "\e[36mAre you sure (Y/N)?\e[0m\e[31mAborted operation!\e[0m\n"
+    end
   end
 end

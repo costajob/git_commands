@@ -5,8 +5,6 @@ module GitCommands
   module Prompt
     VALID_ANSWERS = %w[Y y N n]
 
-    class AbortError < StandardError; end
-
     def out
       @out ||= STDOUT
     end
@@ -34,7 +32,7 @@ module GitCommands
       when /y/i
         yield
       else
-        error("Aborted operation!", AbortError)
+        abort!("Aborted operation!")
       end
     end
 
@@ -43,6 +41,11 @@ module GitCommands
     def ask(message)
       out.print message.cyan
       input
+    end
+
+    def abort!(message)
+      out.puts message.to_s.red
+      exit
     end
 
     def input
