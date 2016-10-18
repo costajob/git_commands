@@ -22,7 +22,7 @@ module GitCommands
       parser.parse!(@args)
       command = @command_klass.new(repo: @repo, branches: @branches)
       command.send(@command_name)
-    rescue StandardError => e
+    rescue Command::GitError, AbortError, ArgumentError => e
       error(e.message)  
     end
 

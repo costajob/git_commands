@@ -8,7 +8,7 @@ module GitCommands
     include Prompt
 
     class GitError < StandardError; end
-    class NoBranchesError < StandardError; end
+    class NoBranchesError < ArgumentError; end
     class NoentRepositoryError < ArgumentError; end
 
     GITHUB_HOST = "github.com"
@@ -92,6 +92,7 @@ module GitCommands
     end
 
     private def fetch_repo(repo)
+      fail NoentRepositoryError, "Please specify a valid GIT repository!" unless repo
       fail NoentRepositoryError, "'#{repo}' is not a valid GIT repository!" unless valid_repo?(repo)
       Pathname::new(repo)
     end
