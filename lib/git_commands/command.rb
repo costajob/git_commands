@@ -116,7 +116,7 @@ module GitCommands
 
     private def check_branch(branch)
       Dir.chdir(@repo) do
-        fail(GitError, "Master branch cannot be included into commands operations!") if branch == "master"
+        fail(GitError, "Commands cannot interact directly with 'master' branch!") if branch == "master"
         fail(GitError, "Branch '#{branch}' does not exist!") unless self.class.valid_branch?(branch)
       end
     end

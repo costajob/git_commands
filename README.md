@@ -2,16 +2,16 @@
 * [Workflow](#workflow)
 * [Scope](#scope)
 * [Installation](#installation)
-  * [git](#git)
+  * [GIT](#git)
 * [Usage](#usage)
   * [Arguments](#help)
     * [Help](#help)
     * [Repository](#repository)
     * [Branches](#branches)
   * [Commands](#commands)
-    * [rebase](#rebase)
-    * [purge](#purge)
-    * [aggregate](#aggregate)
+    * [Rebase](#rebase)
+    * [Purge](#purge)
+    * [Aggregate](#aggregate)
 
 ## Workflow
 This script will facilitate adopting a subset of the branch-featuring workflow characterised by:
@@ -31,8 +31,9 @@ Just install the gem to use the binaries commands.
 gem install git_commands
 ```
 
-### git
-The library uses the Ruby command line execution to invoke the **git** command. I assume you have the GIT program on your path.
+### GIT
+The library uses the Ruby command line execution to invoke the **git** command as a separate process.  
+I assume you have the GIT program on your path.
 
 ## Usage
 Here are the main commands:
@@ -108,10 +109,21 @@ Loading branches file...
 Branch 'noent' does not exist!
 ```
 
+##### Master branch
+Master branch cannot be included into the branches list for obvious reasons (from useless to dangerous ones).
+An error is raised in case master branch is specified:
+
+```
+rebase --repo=./Sites/greatest_hits --branches=master
+
+Loading branches file...
+Commands cannot interact directly with 'master' branch!
+```
+
 ### Commands
 Here are the available GIT commands:
 
-#### rebase
+#### Rebase
 This is probably the most useful command in case you have several branches to rebase with _origin/master_ frequently.
 A confirmation is asked to before rebasing.  
 
@@ -120,7 +132,7 @@ rebase --repo=./Sites/greatest_hits --branches=feature/love_me_tender,feature/te
 ...
 ```
 
-#### purge
+#### Purge
 This command remove the specified branches locally and remotely.  
 A confirmation is asked before removal.  
 
@@ -129,7 +141,7 @@ purge --repo=/temp/top_20 --branches=release/in_the_ghetto
 ...
 ```
 
-#### aggregate
+#### Aggregate
 This command aggregates all of the specified branches into a single one in case you want to create a release branch.  
 It uses the following naming convention: *release/yyyy_mm_dd*  
 A confirmation is asked before aggregating.  
