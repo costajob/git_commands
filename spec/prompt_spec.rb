@@ -15,11 +15,8 @@ describe GitCommands::Prompt do
   end
 
   it "must print error message" do
-    begin
-      instance.error("i loose...")
-    rescue SystemExit
-      instance.out.string.must_equal "\e[31mi loose...\e[0m\n"
-    end
+    instance.error("i loose...")
+    instance.out.string.must_equal "\e[31mi loose...\e[0m\n"
   end
 
   it "must confirm question" do

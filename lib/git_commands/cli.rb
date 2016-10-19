@@ -22,8 +22,9 @@ module GitCommands
       parser.parse!(@args)
       command = @command_klass.new(repo: @repo, branches: @branches)
       command.send(@command_name)
-    rescue Command::GitError, AbortError, ArgumentError => e
+    rescue Command::GitError, AbortError, Repository::InvalidError => e
       error(e.message)  
+      exit
     end
 
     private def create_command
@@ -37,13 +38,13 @@ module GitCommands
 
     private def parser
       OptionParser.new do |opts|
-        opts.banner = "Usage: #{@command_name} --repo=./Sites/oro --branches=feature/add_bin,fetaure/remove_rake_task"
+        opts.banner = "Usage: #{@command_name} --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear"
 
         opts.on("-rREPO", "--repo=REPO", "The path to the existing GIT repository") do |repo|
           @repo = repo
         end
 
-        opts.on("-bBRANCHES", "--branches=BRANCHES", "The comma-separated list of branches or the path to a file listing branches names on each line") do |branches|
+        opts.on("-bBRANCHES", "--branches=BRANCHES", "Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching") do |branches|
           @branches = branches
         end
 

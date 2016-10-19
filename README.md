@@ -15,15 +15,17 @@
 
 ## Workflow
 This script will facilitate adopting a subset of the branch-featuring workflow characterised by:
-* each **feature** will have **its own branch**
-* **feature** branches **derive** directly **form master**
-* **integration** of master to feature branch happens **via rebasing**
-* **release** branches are created **aggregating multiple branches** into a new one
+* each feature will have its own branch
+* feature branches derive directly form master
+* integration of master to feature branch happens via rebasing
+* force pushing of feature branches to origin is not an issue
+* release branches are created aggregating multiple branches
 
 ## Scope
 The scope of this gem is helping out in the following cases:
 * you have multiple feature branches waiting for release due to some reason (i.e. long QA time...), and need to keep them aligned with master
 * you need to quickly aggregate branches for a release
+* you want to cleanup local and remote branches upon release
 
 ## Installation
 Just install the gem to use the binaries commands.
@@ -46,9 +48,9 @@ Display the help of a specific command by:
 
 ```
 rebase --help
-Usage: rebase --repo=./Sites/oro --branches=feature/add_bin,fetaure/remove_rake_task
+Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear
     -r, --repo=REPO                  The path to the existing GIT repository
-    -b, --branches=BRANCHES          The comma-separated list of branches or the path to a file listing branches names on each line
+    -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching
     -h, --help                       Prints this help
 ```
 
@@ -61,14 +63,13 @@ rebase --repo=invalid
 ```
 
 #### Branches
-Along with the repository you always have to specify the list of branches you want the command to interact with.  
-You have two main options here:
+As with the repository you always have to specify the list of branches you want to work with. There are different options:
 
 ##### List of branches
 Specify a comma separated list of branch names:
 
 ```
-rebase --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
+rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
 
 Loading branches file...
 Successfully loaded 3 branches:
@@ -80,7 +81,7 @@ Successfully loaded 3 branches:
 ##### Path to a names file
 Specify a path (absolute or relative) to a file containing the branches names on each line:
 
-File *./Sites/greatest_hits*:
+File */Users/Elvis/greatest_hits/.branches*:
 ```
 feature/love_me_tender
 feature/teddybear
@@ -89,7 +90,7 @@ feature/in_the_ghetto
 ```
 
 ```
-rebase --branches=./Sites/greatest_hits
+rebase --repo=/Users/Elvis/greatest_hits --branches=/Users/Elvis/greatest_hits/.branches
 
 Loading branches file...
 Successfully loaded 4 branches:
@@ -99,25 +100,47 @@ Successfully loaded 4 branches:
 04. feature/in_the_ghetto
 ```
 
-##### Checking
-Each loaded branch is validated for existence (via *rev-parse*), in case it does not an error is raised:
+##### Pattern matching
+In case you want to work with a set of branches with a common pattern, you have to specify a greedy operator with the wild card you want to match.  
+Just consider you have not to specify *origin/* as the name of the branch, since is managed by the script for you: 
 
 ```
-rebase --repo=./Sites/greatest_hits --branches=noent
+rebase --repo=/Users/Elvis/greatest_hits --branches=*der
 
 Loading branches file...
-Branch 'noent' does not exist!
+Successfully loaded 2 branches:
+01. feature/love_me_tender
+02. feature/return_to_sender
+```
+
+##### Checking
+Each loaded branch is validated for existence (but for branches loaded via pattern matching). In case the validation fails, the branch is filtered from the resulting list.
+
+```
+rebase --repo=/Users/Elvis/greatest_hits --branches=noent,feature/love_me_tender
+
+Loading branches file...
+Successfully loaded 1 branch:
+01. feature/love_me_tender
+```
+
+In case no branches have been loaded, an error is raised:
+
+```
+cd /Users/Elvis
+rebase --repo=./greatest_hits --branches=noent1, noent2
+No branches loaded!
 ```
 
 ##### Master branch
-Master branch cannot be included into the branches list for obvious reasons (from useless to dangerous ones).
-An error is raised in case master branch is specified:
+Master branch cannot be included into the branches list for obvious reasons (from useless to dangerous ones):
 
 ```
-rebase --repo=./Sites/greatest_hits --branches=master
+rebase --repo=/Users/Elvis/greatest_hits --branches=master,feature/love_me_tender
 
 Loading branches file...
-Commands cannot interact directly with 'master' branch!
+Successfully loaded 1 branch:
+01. feature/love_me_tender
 ```
 
 ### Commands
@@ -128,7 +151,7 @@ This is probably the most useful command in case you have several branches to re
 A confirmation is asked to before rebasing.  
 
 ```
-rebase --repo=./Sites/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
+rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
 ...
 ```
 
@@ -137,7 +160,7 @@ This command remove the specified branches locally and remotely.
 A confirmation is asked before removal.  
 
 ```
-purge --repo=/temp/top_20 --branches=release/in_the_ghetto
+purge --repo=/temp/top_20 --branches=*obsolete*
 ...
 ```
 
@@ -147,5 +170,5 @@ It uses the following naming convention: *release/yyyy_mm_dd*
 A confirmation is asked before aggregating.  
 
 ```
-aggregate --repo=./Sites/greatest_hits --branches=./Sites/greatest_hits
+aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 ```

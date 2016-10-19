@@ -1,65 +1,26 @@
 require "spec_helper"
 
-def `(command); command; end
-
 describe GitCommands::Command do
   let(:klass) { GitCommands::Command }
-  let(:repo) { Dir.mktmpdir("greatest_hits") }
   let(:out) { StringIO.new }
-  let(:branches) { %w[feature/love-me-tender feature/all-shock-up feature/dont-be-cruel] }
-  let(:branches_file) { Tempfile.new("branches") << branches.join("\n") }
+  let(:path) { Dir.mktmpdir("greatest_hits") }
+  let(:branches) { "feature/love-me-tender, feature/all-shock-up, feature/dont-be-cruel" }
+  let(:instance) { klass.new(repo: path, branches: branches, repo_klass: Mocks::Repository, branch_klass: Mocks::Branch, out: out) }
+  before { def instance.input; "Y"; end }
 
-  before do
-    branches_file.rewind
-    def klass.check_connection; true; end
-    def klass.git_repo?(repo); true; end
-    def klass.valid_branch?(branch); true; end
+  it "must remove local and remote branches" do
+    instance.purge
+    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[33m\nRemoving branch: feature/love-me-tender...\e[0m\n\e[36mRemove local branch (Y/N)?\e[0m\e[36mRemove remote branch (Y/N)?\e[0m\e[33m\nRemoving branch: feature/all-shock-up...\e[0m\n\e[36mRemove local branch (Y/N)?\e[0m\e[36mRemove remote branch (Y/N)?\e[0m\e[33m\nRemoving branch: feature/dont-be-cruel...\e[0m\n\e[36mRemove local branch (Y/N)?\e[0m\e[36mRemove remote branch (Y/N)?\e[0m"
   end
 
-  after { def klass.valid_branch?(branch); true; end }
-
-  it "must raise an error if repo does not exist" do
-    Proc.new { klass.new(repo: "noent", branches: "feature/love-me-tender") }.must_raise GitCommands::Command::NoentRepositoryError
+  it "must rebase with master" do
+    instance.rebase
+    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mProceed rebasing these branches with master (Y/N)?\e[0m\e[33m\nRebasing branch: feature/love-me-tender...\e[0m\n\e[32mRebased successfully!\e[0m\n\e[33m\nRebasing branch: feature/all-shock-up...\e[0m\n\e[32mRebased successfully!\e[0m\n\e[33m\nRebasing branch: feature/dont-be-cruel...\e[0m\n\e[32mRebased successfully!\e[0m\n"
   end
 
-  it "must raise an error for invalid GIT repo" do
-    def klass.git_repo?(repo); false; end
-    Proc.new { klass.new(repo: repo, branches: "feature/love-me-tender") }.must_raise GitCommands::Command::NoentRepositoryError
-  end
-
-  it "must raise an error when master is included into branches list" do
-    Proc.new { klass.new(repo: repo, branches: "master,feature/in_the_ghetto", out: out) }.must_raise klass::GitError
-  end
-
-  it "must raise an error if branch is invalid" do
-    def klass.valid_branch?(branch); false; end
-    Proc.new { klass.new(repo: repo, branches: branches.join(","), out: out) }.must_raise klass::GitError
-  end
-
-  it "must fetch branches from file" do
-    instance = klass.new(repo: repo, branches: branches_file.path, out: out)
-    instance.instance_variable_get(:@branches).must_equal branches
-  end
-
-  describe "git commands" do
-    let(:instance) { klass.new(repo: repo, branches: branches.join(","), out: out) }
-    before { def instance.input; "Y"; end }
-
-    it "must remove local and remote branches" do
-      instance.purge.must_equal branches
-    end
-
-    it "must rebase with master" do
-      instance.rebase.must_equal branches
-    end
-
-    it "must raise an error for unfinished rebase" do
-      def instance.unfinished_rebase?; true; end
-      Proc.new { instance.rebase }.must_raise klass::GitError
-    end
-
-    it "must aggregate branches into a single one" do
-      instance.aggregate.must_equal true
-    end
+  it "must aggregate branches into a single one" do
+    instance.aggregate
+    timestamp = instance.instance_variable_get(:@timestamp)
+    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mAggregate branches into release/#{timestamp} (Y/N)?\e[0m\e[33m\nMerging branch: feature/love-me-tender...\e[0m\n\e[33m\nMerging branch: feature/all-shock-up...\e[0m\n\e[33m\nMerging branch: feature/dont-be-cruel...\e[0m\n\e[32mrelease/#{timestamp} branch created\e[0m\n"
   end
 end

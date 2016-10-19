@@ -34,7 +34,6 @@ module GitCommands
 
     def error(message)
       out.puts message.to_s.red
-      exit
     end
 
     private def ask(message)
