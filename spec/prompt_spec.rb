@@ -6,7 +6,7 @@ describe GitCommands::Prompt do
 
   it "must print a warning" do
     instance.warning("should print the warning")
-    instance.out.string.must_equal "\e[33m\nshould print the warning...\e[0m\n"
+    instance.out.string.must_equal "\e[33m\nshould print the warning\e[0m\n"
   end
 
   it "must print success message" do

@@ -16,7 +16,6 @@ module GitCommands
     def initialize(repo:, branches:, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
       @out = out
       @repo = repo_klass.new(repo)
-      @conflictual = []
       Dir.chdir(@repo) do
         @branches = branch_klass.factory(branches)
         @timestamp = Time.new.strftime("%Y-%m-%d")
@@ -26,12 +25,10 @@ module GitCommands
 
     def purge
       enter_repo do
-        @branches.each do |branch|
-          warning("Removing branch: #{branch}")
-          confirm("Remove local branch") do
-            `git branch -D #{branch}`
-          end
-          confirm("Remove remote branch") do
+        confirm("Proceed removing these branches") do
+          @branches.each do |branch|
+            warning("Removing branch: #{branch}")
+            `git branch -D #{branch}` if branch.exists?(false)
             `git push origin :#{branch}`
           end
         end
@@ -45,13 +42,12 @@ module GitCommands
             warning("Rebasing branch: #{branch}")
             `git checkout #{branch}`
             `git pull origin #{branch}`
-            @conflictual << branch && next unless rebase_with_master
+            next unless rebase_with_master
             `git push -f origin #{branch}`
             `git checkout #{Branch::MASTER}`
             `git branch -D #{branch}`
-            success "Rebased successfully!"
+            success("Rebased successfully!")
           end
-          delete_conflictual
         end
       end
     end
@@ -65,16 +61,14 @@ module GitCommands
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            @conflictual << branch && next unless rebase_with_master
+            exit unless rebase_with_master
             `git rebase #{aggregate}`
             `git checkout #{aggregate}`
             `git merge #{temp}`
-            `git branch -d #{temp}`
+            `git branch -D #{temp}`
           end      
-          `git checkout #{Branch::MASTER}`
         end
-        delete_conflictual
-        success "#{aggregate} branch created"
+        success("#{aggregate} branch created")
       end
     end
 
@@ -82,7 +76,7 @@ module GitCommands
       fail GitError, "No branches loaded!" if @branches.empty?
       size = @branches.to_a.size
       plural = size > 1 ? "es" : ""
-      success "Successfully loaded #{size} branch#{plural}:"
+      success("Successfully loaded #{size} branch#{plural}:")
       @out.puts @branches.each_with_index.map { |branch, i| "#{(i+1).to_s.rjust(2, "0")}. #{branch}" } + [""]
     end
 
@@ -96,14 +90,6 @@ module GitCommands
       return true unless @repo.locked?
       `git rebase --abort`
       error("Got conflicts, aborting rebase!")
-    end
-
-    private def delete_conflictual
-      return if @conflictual.empty?
-      `git checkout #{Branch::MASTER}`
-      @conflictual.each do |branch|
-        `git branch -D #{branch}`
-      end
     end
 
     private def enter_repo

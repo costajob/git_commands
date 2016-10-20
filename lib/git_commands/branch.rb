@@ -59,8 +59,9 @@ module GitCommands
       @name == MASTER
     end
 
-    private def exists?
-      `git rev-parse --verify origin/#{@name} 2> /dev/null`.match(/^[0-9a-z]+/)
+    def exists?(remote = true)
+      origin = ORIGIN if remote
+      `git rev-parse --verify #{origin}#{@name} 2> /dev/null`.match(/^[0-9a-z]+/)
     end
   end
 end

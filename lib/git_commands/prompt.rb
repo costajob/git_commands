@@ -12,7 +12,7 @@ module GitCommands
     end
 
     def warning(message)
-      out.puts "\n#{message}...".yellow
+      out.puts "\n#{message}".yellow
     end
 
     def success(message)

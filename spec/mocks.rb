@@ -46,6 +46,10 @@ module Mocks
     def valid?
       true
     end
+
+    def exists?(remote = true)
+      true
+    end
   end
 
   class Command
