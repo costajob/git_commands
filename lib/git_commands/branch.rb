@@ -24,7 +24,7 @@ module GitCommands
       return [] unless pattern.index("*")
       `git branch -r --list #{ORIGIN}#{pattern}`.split("\n").map do |name|
         new(strip_origin(name))
-      end
+      end.reject(&:master?)
     end
 
     def self.factory(src)
@@ -55,7 +55,7 @@ module GitCommands
       self.name == other.name
     end
 
-    private def master?
+    def master?
       @name == MASTER
     end
 

@@ -2,7 +2,7 @@ module Mocks
   def `(command)
     case command
     when /^git branch -r/
-      "  origin/feature/love-me-tender\n  origin/feature/all-shock-up\n  origin/feature/dont-be-cruel\n"
+      "  master\n  origin/feature/love-me-tender\n  origin/feature/all-shock-up\n  origin/feature/dont-be-cruel\n"
     when /^git rev-parse --verify origin/ 
       "830537aa0d35ae6b3a44610a1a0c1d7388224ca7"
     when /^git rev-parse --is-inside-work-tree/
