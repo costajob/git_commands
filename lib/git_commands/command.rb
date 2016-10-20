@@ -100,6 +100,7 @@ module GitCommands
 
     private def delete_conflictual
       return if @conflictual.empty?
+      `git checkout #{Branch::MASTER}`
       @conflictual.each do |branch|
         `git branch -D #{branch}`
       end
