@@ -16,6 +16,7 @@ module GitCommands
     def initialize(repo:, branches:, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
       @out = out
       @repo = repo_klass.new(repo)
+      @conflictual = []
       Dir.chdir(@repo) do
         @branches = branch_klass.factory(branches)
         @timestamp = Time.new.strftime("%Y-%m-%d")
@@ -44,12 +45,13 @@ module GitCommands
             warning("Rebasing branch: #{branch}")
             `git checkout #{branch}`
             `git pull origin #{branch}`
-            next unless rebase_with_master(branch)
+            @conflictual << branch && next unless rebase_with_master
             `git push -f origin #{branch}`
             `git checkout #{Branch::MASTER}`
             `git branch -D #{branch}`
             success "Rebased successfully!"
           end
+          delete_conflictual
         end
       end
     end
@@ -63,7 +65,7 @@ module GitCommands
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            next unless rebase_with_master(branch)
+            @conflictual << branch && next unless rebase_with_master
             `git rebase #{aggregate}`
             `git checkout #{aggregate}`
             `git merge #{temp}`
@@ -71,6 +73,7 @@ module GitCommands
           end      
           `git checkout #{Branch::MASTER}`
         end
+        delete_conflictual
         success "#{aggregate} branch created"
       end
     end
@@ -88,13 +91,18 @@ module GitCommands
       `git pull`
     end
 
-    private def rebase_with_master(branch)
+    private def rebase_with_master
       `git rebase origin/#{Branch::MASTER}`
       return true unless @repo.locked?
       `git rebase --abort`
-      `git checkout #{Branch::MASTER}`
-      `git branch -D #{branch}`
-      error("Got conflicts, skipping rebase!")
+      error("Got conflicts, aborting rebase!")
+    end
+
+    private def delete_conflictual
+      return if @conflictual.empty?
+      @conflictual.each do |branch|
+        `git branch -D #{branch}`
+      end
     end
 
     private def enter_repo
