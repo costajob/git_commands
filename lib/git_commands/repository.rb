@@ -21,6 +21,12 @@ module GitCommands
       end
     end
 
+    def unlock
+      Dir.chdir(@path) do
+        `git rebase --abort`
+      end
+    end
+
     private def valid?
       return false unless exists?
       work_tree?

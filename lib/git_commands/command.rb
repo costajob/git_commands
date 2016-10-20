@@ -88,7 +88,7 @@ module GitCommands
     private def rebase_with_master
       `git rebase origin/#{Branch::MASTER}`
       return true unless @repo.locked?
-      `git rebase --abort`
+      @repo.unlock
       error("Got conflicts, aborting rebase!")
     end
 

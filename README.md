@@ -55,7 +55,7 @@ Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tende
 ```
 
 #### Repository
-You have to specify the path (absolute or relative) to the GIT repository you want to work with. The path must be a folder initialized as a valid GIT repository (a check via *rev-parse* is performed), otherwise an error is raised:
+You have to specify the absolute path to the GIT repository you want to work with. The path must be a folder initialized as a valid GIT repository (a check via *rev-parse* is performed), otherwise an error is raised:
 
 ```
 rebase --repo=invalid
@@ -79,7 +79,7 @@ Successfully loaded 3 branches:
 ```
 
 ##### Path to a names file
-Specify a path (absolute or relative) to a file containing the branches names on each line:
+Specify an absolute path to a file containing the branches names on each line:
 
 File */Users/Elvis/greatest_hits/.branches*:
 ```
@@ -127,8 +127,7 @@ Successfully loaded 1 branch:
 In case no branches have been loaded, an error is raised:
 
 ```
-cd /Users/Elvis
-rebase --repo=./greatest_hits --branches=noent1, noent2
+rebase --repo=/Users/Elvis/greatest_hits --branches=noent1,noent2
 No branches loaded!
 ```
 
