@@ -44,7 +44,7 @@ module GitCommands
             warning("Rebasing branch: #{branch}")
             `git checkout #{branch}`
             `git pull origin #{branch}`
-            next unless rebase_with_master
+            next unless rebase_with_master(branch)
             `git push -f origin #{branch}`
             `git checkout #{Branch::MASTER}`
             `git branch -D #{branch}`
@@ -63,7 +63,7 @@ module GitCommands
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            next unless rebase_with_master
+            next unless rebase_with_master(branch)
             `git rebase #{aggregate}`
             `git checkout #{aggregate}`
             `git merge #{temp}`
@@ -88,10 +88,12 @@ module GitCommands
       `git pull`
     end
 
-    private def rebase_with_master
+    private def rebase_with_master(branch)
       `git rebase origin/#{Branch::MASTER}`
       return true unless @repo.locked?
       `git rebase --abort`
+      `git checkout #{Branch::MASTER}`
+      `git branch -D #{branch}`
       error("Got conflicts, skipping rebase!")
     end
 
