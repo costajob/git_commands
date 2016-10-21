@@ -53,21 +53,21 @@ module GitCommands
 
     def aggregate
       temp = "temp/#{@timestamp}"
-      aggregate = "release/#{@timestamp}"
-      confirm("Aggregate branches into #{aggregate}") do
+      release = "release/#{@timestamp}"
+      confirm("Aggregate branches into #{release}") do
         enter_repo do
-          `git branch #{aggregate}`
+          `git branch #{release}`
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            exit unless rebase_with_master
-            `git rebase #{aggregate}`
-            `git checkout #{aggregate}`
+            remove_locals([temp, release]) && exit unless rebase_with_master
+            `git rebase #{release}`
+            `git checkout #{release}`
             `git merge #{temp}`
             `git branch -D #{temp}`
           end      
         end
-        success("#{aggregate} branch created")
+        success("#{release} branch created")
       end
     end
 
@@ -98,9 +98,9 @@ module GitCommands
       end
     end
 
-    private def remove_locals
+    private def remove_locals(branches = @branches)
       `git checkout #{Branch::MASTER}`
-      @branches.each do |branch|
+      branches.each do |branch|
         `git branch -D #{branch}`
       end
     end
