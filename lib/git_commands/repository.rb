@@ -30,12 +30,7 @@ module GitCommands
     end
 
     private def valid?
-      return false unless exists?
-      work_tree?
-    end
-
-    private def exists?
-      @path.directory?
+      @path.directory? && work_tree?
     end
 
     private def work_tree?
