@@ -19,12 +19,12 @@ module GitCommands
 
     def locked?
       LOCKING_FILES.any? do |name| 
-        File.exists?(@path.join(".git", name))
+        @path.join(".git", name).exist?
       end
     end
 
     def unlock
-      Dir.chdir(@path) do
+      Dir.chdir(self) do
         `git rebase --abort`
       end
     end
@@ -35,11 +35,11 @@ module GitCommands
     end
 
     private def exists?
-      File.directory?(@path)
+      @path.directory?
     end
 
     private def work_tree?
-      Dir.chdir(@path) do
+      Dir.chdir(self) do
         `git rev-parse --is-inside-work-tree 2> /dev/null`.strip == "true"
       end
     end
