@@ -1,6 +1,3 @@
-require "pathname"
-require "fileutils"
-require "net/http"
 require "git_commands/prompt"
 require "git_commands/branch"
 require "git_commands/repository"
