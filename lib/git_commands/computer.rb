@@ -42,7 +42,7 @@ module GitCommands
             warning("Rebasing branch: #{branch}")
             `git checkout #{branch}`
             `git pull origin #{branch}`
-            next unless rebase_with_master
+            next unless rebase_with
             `git push -f origin #{branch}`
             success("Rebased successfully!")
           end
@@ -60,8 +60,8 @@ module GitCommands
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            remove_locals([temp, release]) && exit unless rebase_with_master
-            `git rebase #{release}`
+            clean_and_exit([temp, release]) unless rebase_with
+            clean_and_exit([temp]) unless rebase_with(release)
             `git checkout #{release}`
             `git merge #{temp}`
             `git branch -D #{temp}`
@@ -91,6 +91,13 @@ module GitCommands
       error("Got conflicts, aborting rebase!")
     end
 
+    private def rebase_with(branch = "#{Branch::ORIGIN}#{Branch::MASTER}")
+      `git rebase #{branch}`
+      return true unless @repo.locked?
+      @repo.unlock
+      error("Got conflicts, aborting rebase with #{branch}!")
+    end
+
     private def enter_repo
       Dir.chdir(@repo) do
         pull_master
@@ -103,6 +110,11 @@ module GitCommands
       branches.each do |branch|
         `git branch -D #{branch}`
       end
+    end
+
+    private def clean_and_exit(branches)
+      remove_locals(branches)
+      exit
     end
   end
 end
