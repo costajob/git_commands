@@ -52,7 +52,7 @@ module Mocks
     end
   end
 
-  class Command
+  class Computer
     def initialize(repo:, branches:)
       @repo = repo
       @branches = branches

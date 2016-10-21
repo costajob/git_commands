@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe GitCommands::Command do
-  let(:klass) { GitCommands::Command }
+describe GitCommands::Computer do
+  let(:klass) { GitCommands::Computer }
   let(:out) { StringIO.new }
   let(:path) { Dir.mktmpdir("greatest_hits") }
   let(:branches) { "feature/love-me-tender, feature/all-shock-up, feature/dont-be-cruel" }

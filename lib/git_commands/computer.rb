@@ -6,7 +6,7 @@ require "git_commands/branch"
 require "git_commands/repository"
 
 module GitCommands
-  class Command
+  class Computer
     include Prompt
 
     class GitError < StandardError; end
@@ -44,10 +44,9 @@ module GitCommands
             `git pull origin #{branch}`
             next unless rebase_with_master
             `git push -f origin #{branch}`
-            `git checkout #{Branch::MASTER}`
-            `git branch -D #{branch}`
             success("Rebased successfully!")
           end
+          remove_locals
         end
       end
     end
@@ -96,6 +95,13 @@ module GitCommands
       Dir.chdir(@repo) do
         pull_master
         yield
+      end
+    end
+
+    private def remove_locals
+      `git checkout #{Branch::MASTER}`
+      @branches.each do |branch|
+        `git branch -D #{branch}`
       end
     end
   end

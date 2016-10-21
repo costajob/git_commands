@@ -8,20 +8,14 @@ describe GitCommands::CLI do
   it "must call the spcified command on the built instance" do
     repo = "/Users/Elvis/greatest_hits"
     GitCommands::CLI::VALID_COMMANDS.each do |name|
-      cli = GitCommands::CLI.new(command_name: name, 
-                                 args: %W[--repo=#{repo} --branches=teddybear,love_me_tender], 
-                                 command_klass: Mocks::Command)
+      cli = GitCommands::CLI.new(command_name: name, args: %W[--repo=#{repo} --branches=teddybear,love_me_tender], computer_klass: Mocks::Computer)
       cli.call.must_equal "#{name} on #{repo}"
     end
   end
 
   it "must print the help" do
     out = StringIO.new
-    cli = GitCommands::CLI.new(command_name: "rebase", 
-                               args: %w[--help],
-                               out: out,
-                               command_klass: Mocks::Command)
-
+    cli = GitCommands::CLI.new(command_name: "rebase", args: %w[--help], out: out, computer_klass: Mocks::Computer)
     begin
       cli.call
     rescue SystemExit

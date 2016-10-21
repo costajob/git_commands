@@ -1,5 +1,5 @@
 require "optparse"
-require "git_commands/command"
+require "git_commands/computer"
 
 module GitCommands
   class CLI
@@ -9,9 +9,9 @@ module GitCommands
 
     class UnknownCommandError < ArgumentError; end
 
-    def initialize(command_name:, args: ARGV, out: STDOUT, command_klass: Command)
+    def initialize(command_name:, args: ARGV, out: STDOUT, computer_klass: Computer)
       @command_name = check_command_name(command_name)
-      @command_klass = command_klass
+      @computer_klass = computer_klass
       @args = args
       @out = out 
       @repo = nil
@@ -20,15 +20,11 @@ module GitCommands
 
     def call
       parser.parse!(@args)
-      command = @command_klass.new(repo: @repo, branches: @branches)
-      command.send(@command_name)
-    rescue Command::GitError, AbortError, Repository::InvalidError => e
+      computer = @computer_klass.new(repo: @repo, branches: @branches)
+      computer.send(@command_name)
+    rescue Computer::GitError, AbortError, Repository::InvalidError => e
       error(e.message)  
       exit
-    end
-
-    private def create_command
-      return @command if @command
     end
 
     private def check_command_name(name)
