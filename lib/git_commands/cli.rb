@@ -22,7 +22,7 @@ module GitCommands
       parser.parse!(@args)
       computer = @computer_klass.new(repo: @repo, branches: @branches)
       computer.send(@command_name)
-    rescue Computer::GitError, AbortError, Repository::InvalidError => e
+    rescue Repository::PathError, Computer::GitError, AbortError, Repository::InvalidError => e
       error(e.message)  
       exit
     end

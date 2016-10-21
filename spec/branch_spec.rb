@@ -31,7 +31,7 @@ describe GitCommands::Branch do
     end
 
     it "must return an empty array if file does not exist" do
-      klass.by_file("noent").must_be_empty
+      klass.by_file("/noent").must_be_empty
     end
 
     it "must parse the names file properly" do

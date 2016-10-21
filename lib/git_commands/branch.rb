@@ -1,4 +1,7 @@
+require "pathname"
+
 module GitCommands
+  using Colorize
   class Branch
     MASTER = "master"
     ORIGIN = "origin/"
@@ -7,15 +10,9 @@ module GitCommands
       name.strip.split(ORIGIN).last
     end
 
-    def self.by_names(names_list)
-      String(names_list).split(",").map do |name|
-        new(name.strip)
-      end.select(&:valid?)
-    end
-
-    def self.by_file(names_file)
-      return [] unless File.file?(names_file)
-      File.foreach(names_file).map do |name|
+    def self.by_file(path)
+      return [] unless valid_path?(path)
+      File.foreach(path).map do |name|
         new(name.strip)
       end.select(&:valid?)
     end
@@ -27,12 +24,24 @@ module GitCommands
       end.reject(&:master?)
     end
 
+    def self.by_names(names_list)
+      String(names_list).split(",").map do |name|
+        new(name.strip)
+      end.select(&:valid?)
+    end
+
     def self.factory(src)
       return [] unless src
       branches = by_file(src)
       branches = by_pattern(src) if branches.empty?
       branches = by_names(src) if branches.empty?
       branches
+    end
+
+    def self.valid_path?(path)
+      path = Pathname.new(path)
+      warn "'#{path}' must be an absolute path!".red unless path.absolute?
+      path.absolute? && path.file?
     end
 
     attr_reader :name

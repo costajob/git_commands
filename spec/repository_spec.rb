@@ -5,9 +5,12 @@ describe GitCommands::Repository do
   let(:klass) { GitCommands::Repository }
   let(:instance) { klass.new(path) }
 
-  it "must detect non existent repository" do
-    -> { klass.new(nil) }.must_raise klass::InvalidError
-    -> { klass.new("noent") }.must_raise klass::InvalidError
+  it "must detect invalid path" do
+    -> { klass.new(nil) }.must_raise klass::PathError
+  end
+
+  it "must detect non existent path" do
+    -> { klass.new("/var/greatest_hits") }.must_raise klass::InvalidError
   end
 
   it "must detect unlocked state" do

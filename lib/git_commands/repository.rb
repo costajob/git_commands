@@ -4,10 +4,12 @@ module GitCommands
   class Repository
     LOCKING_FILES = %w(rebase-merge rebase-apply)
 
+    class PathError < ArgumentError; end
     class InvalidError < StandardError; end
 
     def initialize(path)
       @path = Pathname::new(path.to_s)
+      fail PathError, "'#{path}' must be an absolute path!" unless @path.absolute?
       fail InvalidError, "'#{path}' is not a valid GIT repository!" unless valid?
     end
 
