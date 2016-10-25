@@ -14,10 +14,10 @@
     * [Aggregate](#aggregate)
 
 ## Workflow
-This script will facilitate adopting a subset of the branch-featuring workflow characterised by:
+This script facilitates adopting a subset of the branch-featuring workflow characterised by:
 * each feature will have its own branch
 * feature branches derive directly form master
-* integration of master to feature branch happens via rebasing
+* integration of master to feature branch happens via rebasing to maintain a straight commits line
 * force pushing of feature branches to origin is not an issue
 * release branches are created aggregating multiple branches
 
@@ -114,7 +114,8 @@ Successfully loaded 2 branches:
 ```
 
 ##### Checking
-Each loaded branch is validated for existence (but for branches loaded via pattern matching). In case the validation fails, the branch is filtered from the resulting list.
+Each loaded branch is validated for existence (but for branches loaded via pattern matching, already fetched from origin).   
+In case the validation fails, the branch is filtered from the resulting list.
 
 ```
 rebase --repo=/Users/Elvis/greatest_hits --branches=noent,feature/love_me_tender
@@ -132,7 +133,7 @@ No branches loaded!
 ```
 
 ##### Master branch
-Master branch cannot be included into the branches list for obvious reasons (from useless to dangerous ones):
+Master branch cannot be included into the branches list for obvious reasons:
 
 ```
 rebase --repo=/Users/Elvis/greatest_hits --branches=master,feature/love_me_tender
@@ -146,7 +147,7 @@ Successfully loaded 1 branch:
 Here are the available GIT commands:
 
 #### Rebase
-This is probably the most useful command in case you have several branches to rebase with _origin/master_ frequently.
+This command is useful in case you have several branches to rebase with _origin/master_ frequently.
 A confirmation is asked to before rebasing.  
 
 ```
@@ -165,7 +166,7 @@ purge --repo=/temp/top_20 --branches=*obsolete*
 
 #### Aggregate
 This command aggregates all of the specified branches into a single one in case you want to create a release branch.  
-It uses the following naming convention: *release/yyyy_mm_dd*  
+The created release branch follows this naming convention: *release/yyyy_mm_dd*  
 A confirmation is asked before aggregating.  
 
 ```

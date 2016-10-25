@@ -40,7 +40,6 @@ module GitCommands
 
     def self.valid_path?(path)
       path = Pathname.new(path)
-      warn "'#{path}' must be an absolute path!".red unless path.absolute?
       path.absolute? && path.file?
     end
 
