@@ -50,21 +50,21 @@ module GitCommands
 
     def aggregate
       temp = "temp/#{@timestamp}"
-      release = "release/#{@timestamp}"
-      confirm("Aggregate branches into #{release}") do
+      target = "aggregate/#{@timestamp}"
+      confirm("Aggregate branches into #{target}") do
         enter_repo do
-          `git branch #{release}`
+          `git branch #{target}`
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            clean_and_exit([temp, release]) unless rebase_with
-            clean_and_exit([temp]) unless rebase_with(release)
-            `git checkout #{release}`
+            clean_and_exit([temp, target]) unless rebase_with
+            clean_and_exit([temp]) unless rebase_with(target)
+            `git checkout #{target}`
             `git merge #{temp}`
             `git branch -D #{temp}`
           end      
         end
-        success("#{release} branch created")
+        success("#{target} branch created")
       end
     end
 

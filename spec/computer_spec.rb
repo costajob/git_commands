@@ -21,6 +21,6 @@ describe GitCommands::Computer do
   it "must aggregate branches into a single one" do
     instance.aggregate
     timestamp = instance.instance_variable_get(:@timestamp)
-    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mAggregate branches into release/#{timestamp} (Y/N)?\e[0m\e[33m\nMerging branch: feature/love-me-tender\e[0m\n\e[33m\nMerging branch: feature/all-shock-up\e[0m\n\e[33m\nMerging branch: feature/dont-be-cruel\e[0m\n\e[32mrelease/#{timestamp} branch created\e[0m\n"
+    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mAggregate branches into aggregate/#{timestamp} (Y/N)?\e[0m\e[33m\nMerging branch: feature/love-me-tender\e[0m\n\e[33m\nMerging branch: feature/all-shock-up\e[0m\n\e[33m\nMerging branch: feature/dont-be-cruel\e[0m\n\e[32maggregate/#{timestamp} branch created\e[0m\n"
   end
 end

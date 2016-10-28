@@ -166,7 +166,7 @@ remove --repo=/temp/top_20 --branches=*obsolete*
 
 #### Aggregate
 This command aggregates all of the specified branches into a single one in case you want to create a release branch.  
-The created release branch follows this naming convention: *release/yyyy_mm_dd*  
+The created aggregate branch follows this naming convention: *aggregate/yyyy_mm_dd*  
 A confirmation is asked before aggregating.  
 
 ```
