@@ -10,7 +10,7 @@
     * [Branches](#branches)
   * [Commands](#commands)
     * [Rebase](#rebase)
-    * [Purge](#purge)
+    * [Remove](#remove)
     * [Aggregate](#aggregate)
 
 ## Workflow
@@ -155,12 +155,12 @@ rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,featu
 ...
 ```
 
-#### Purge
+#### Remove
 This command remove the specified branches locally and remotely.  
 A confirmation is asked before removal.  
 
 ```
-purge --repo=/temp/top_20 --branches=*obsolete*
+remove --repo=/temp/top_20 --branches=*obsolete*
 ...
 ```
 
@@ -171,4 +171,5 @@ A confirmation is asked before aggregating.
 
 ```
 aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+...
 ```

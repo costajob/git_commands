@@ -5,5 +5,5 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require "git_commands"
 
-cli = GitCommands::CLI.new(command_name: "purge")
+cli = GitCommands::CLI.new(command_name: "remove")
 cli.call

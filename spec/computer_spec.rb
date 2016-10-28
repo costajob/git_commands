@@ -9,7 +9,7 @@ describe GitCommands::Computer do
   before { def instance.input; "Y"; end }
 
   it "must remove branches" do
-    instance.purge
+    instance.remove
     instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mProceed removing these branches (Y/N)?\e[0m\e[33m\nRemoving branch: feature/love-me-tender\e[0m\n\e[33m\nRemoving branch: feature/all-shock-up\e[0m\n\e[33m\nRemoving branch: feature/dont-be-cruel\e[0m\n"
   end
 

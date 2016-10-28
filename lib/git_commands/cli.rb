@@ -5,7 +5,7 @@ module GitCommands
   class CLI
     include Prompt
 
-    VALID_COMMANDS = %w[rebase aggregate purge]
+    VALID_COMMANDS = %w[rebase aggregate remove]
 
     class UnknownCommandError < ArgumentError; end
 

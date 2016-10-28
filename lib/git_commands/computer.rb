@@ -20,7 +20,7 @@ module GitCommands
       end
     end
 
-    def purge
+    def remove
       enter_repo do
         confirm("Proceed removing these branches") do
           @branches.each do |branch|
