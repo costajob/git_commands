@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec|s|features)/}) }
   s.bindir = "bin"
-  s.executables = %w[rebase aggregate purge]
+  s.executables = %w[rebase aggregate remove]
   s.require_paths = ["lib"]
 
   s.add_development_dependency "bundler", "~> 1.11"
