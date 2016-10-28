@@ -58,7 +58,7 @@ module Mocks
       @branches = branches
     end
 
-    %w[purge rebase aggregate].each do |msg|
+    %w[remove rebase aggregate].each do |msg|
       define_method(msg) do
         "#{msg} on #{@repo}"
       end
