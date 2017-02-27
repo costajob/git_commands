@@ -19,7 +19,7 @@ describe GitCommands::CLI do
     begin
       cli.call
     rescue SystemExit
-      out.string.must_equal "Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear\n    -r, --repo=REPO                  The path to the existing GIT repository\n    -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching\n    -h, --help                       Prints this help\n"
+      out.string.must_equal "Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear\n    -r, --repo=REPO                  The path to the existing GIT repository\n    -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching\n    -t, --target=TARGET              Specify the target branch, default to master\n    -h, --help                       Prints this help\n"
     end
   end
 end

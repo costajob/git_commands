@@ -20,11 +20,15 @@ module GitCommands
 
     def call
       parser.parse!(@args)
-      computer = @computer_klass.new(repo: @repo, branches: @branches)
+      computer = @computer_klass.new(repo: @repo, branches: @branches, target: target)
       computer.send(@command_name)
     rescue Repository::PathError, Computer::GitError, AbortError, Repository::InvalidError => e
       error(e.message)  
       exit
+    end
+
+    private def target
+      @target || Branch::MASTER
     end
 
     private def check_command_name(name)
@@ -42,6 +46,10 @@ module GitCommands
 
         opts.on("-bBRANCHES", "--branches=BRANCHES", "Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching") do |branches|
           @branches = branches
+        end
+
+        opts.on("-tTARGET", "--target=TARGET", "Specify the target branch, default to master") do |target|
+          @target = target
         end
 
         opts.on("-h", "--help", "Prints this help") do

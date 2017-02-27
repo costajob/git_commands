@@ -23,4 +23,10 @@ describe GitCommands::Computer do
     timestamp = instance.instance_variable_get(:@timestamp)
     instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mAggregate branches into aggregate/#{timestamp} (Y/N)?\e[0m\e[33m\nMerging branch: feature/love-me-tender\e[0m\n\e[33m\nMerging branch: feature/all-shock-up\e[0m\n\e[33m\nMerging branch: feature/dont-be-cruel\e[0m\n\e[32maggregate/#{timestamp} branch created\e[0m\n"
   end
+
+  it "must rebase with specific branch" do
+    instance.target = "rc/release_to_prod"
+    instance.rebase
+    instance.out.string.must_equal "\e[32mSuccessfully loaded 3 branches:\e[0m\n01. feature/love-me-tender\n02. feature/all-shock-up\n03. feature/dont-be-cruel\n\n\e[36mProceed rebasing these branches with rc/release_to_prod (Y/N)?\e[0m\e[33m\nRebasing branch: feature/love-me-tender\e[0m\n\e[32mRebased successfully!\e[0m\n\e[33m\nRebasing branch: feature/all-shock-up\e[0m\n\e[32mRebased successfully!\e[0m\n\e[33m\nRebasing branch: feature/dont-be-cruel\e[0m\n\e[32mRebased successfully!\e[0m\n"
+  end
 end

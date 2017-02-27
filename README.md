@@ -51,6 +51,7 @@ rebase --help
 Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear
     -r, --repo=REPO                  The path to the existing GIT repository
     -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching
+    -t, --target=TARGET              Specify the target branch, default to master
     -h, --help                       Prints this help
 ```
 
@@ -141,6 +142,20 @@ rebase --repo=/Users/Elvis/greatest_hits --branches=master,feature/love_me_tende
 Loading branches file...
 Successfully loaded 1 branch:
 01. feature/love_me_tender
+```
+
+
+##### Target branch
+All of the commands runs considering master branch as the target one.  
+In case you need to act on a different target branch you can specify it by using the appropriate option:
+```
+rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender --target=rc/release_to_graceland
+
+Loading branches file...
+Successfully loaded 1 branch:
+01. feature/love_me_tender
+
+Proceed rebasing these branches with rc/release_to_graceland (Y/N)?
 ```
 
 ### Commands

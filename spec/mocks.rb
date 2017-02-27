@@ -53,7 +53,7 @@ module Mocks
   end
 
   class Computer
-    def initialize(repo:, branches:)
+    def initialize(repo:, branches:, target: "master")
       @repo = repo
       @branches = branches
     end
