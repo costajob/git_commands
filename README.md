@@ -144,30 +144,29 @@ Successfully loaded 1 branch:
 01. feature/love_me_tender
 ```
 
+### Commands
+Here are the available GIT commands:
+
+#### Rebase
+This command is useful in case you have several branches to rebase with _origin/master_ (or another specified target) frequently.
+A confirmation is asked to before rebasing.  
+
+```
+rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
+...
+```
 
 ##### Target branch
-All of the commands runs considering master branch as the target one.  
-In case you need to act on a different target branch you can specify it by using the appropriate option:
+The rebasing runs considering master branch as the target one.  
+In case you need to rebase against a different target branch you can specify it:
 ```
-rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender --target=rc/release_to_graceland
+rebase --repo=/Users/Elvis/greatest_hits --target=rc/release_to_graceland --branches=feature/love_me_tender
 
 Loading branches file...
 Successfully loaded 1 branch:
 01. feature/love_me_tender
 
 Proceed rebasing these branches with rc/release_to_graceland (Y/N)?
-```
-
-### Commands
-Here are the available GIT commands:
-
-#### Rebase
-This command is useful in case you have several branches to rebase with _origin/master_ frequently.
-A confirmation is asked to before rebasing.  
-
-```
-rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,feature/teddybear,feature/return_to_sender
-...
 ```
 
 #### Remove
