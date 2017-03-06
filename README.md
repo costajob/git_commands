@@ -48,10 +48,11 @@ Display the help of a specific command by:
 
 ```
 rebase --help
-Usage: rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,fetaure/teddybear
+Usage: rebase --repo=/Users/Elvis/greatest_hits --origin=upstream --target=production --branches=feature/love_me_tender,fetaure/teddybear
     -r, --repo=REPO                  The path to the existing GIT repository
+    -o  --origin=ORIGIN              Specify the remote alias, default to ORIGIN environment variable or 'origin'
+    -t, --target=TARGET              Specify the target branch, default to TARGET environment variable or 'master'
     -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching
-    -t, --target=TARGET              Specify the target branch, default to master
     -h, --help                       Prints this help
 ```
 
@@ -180,10 +181,20 @@ remove --repo=/temp/top_20 --branches=*obsolete*
 
 #### Aggregate
 This command aggregates all of the specified branches into a single one in case you want to create a release branch.  
-The created aggregate branch follows this naming convention: *aggregate/yyyy_mm_dd*  
 A confirmation is asked before aggregating.  
 
 ```
 aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 ...
 ```
+
+##### Aggregate naming
+The created aggregate branch follows a default naming convention pattern: 
+`release/rc-<progressive>.<release_type>_<risk>_<timestamp>` 
+
+Each of the term within the `<` and `>` chars are replaced by related (upcased) environment variables, but for the `timestamp`, that is computed at runtime in the `yyyymmdd` format.  
+
+You can overwrite the pattern by specifying the following environment variables:
+* `AGGREGATOR_NAME` - the name to be used by the aggregator branch, no matter the pattern variables
+* `AGGREGATOR_PATTERN` - change the naming pattern by specifying the related environment variables per each specified part within the `<` and `>` chars (default to empty string if not declared)
+

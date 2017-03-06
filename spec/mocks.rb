@@ -53,14 +53,16 @@ module Mocks
   end
 
   class Computer
-    def initialize(repo:, branches:, target: "master")
+    def initialize(repo:, branches:, origin: "origin", target: "master")
       @repo = repo
+      @origin = origin
+      @target = target
       @branches = branches
     end
 
     %w[remove rebase aggregate].each do |msg|
       define_method(msg) do
-        "#{msg} on #{@repo}"
+        "#{msg} on #{@repo}@#{@origin}/#{@target}"
       end
     end
   end
@@ -70,6 +72,16 @@ module Mocks
 
     def out
       @out ||= StringIO.new 
+    end
+  end
+
+  class Aggregator
+    def timestamp
+      "2017-02-01"
+    end
+
+    def call
+      "aggregate/#{timestamp}"
     end
   end
 end

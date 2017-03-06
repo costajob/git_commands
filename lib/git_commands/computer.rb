@@ -1,6 +1,7 @@
 require "git_commands/prompt"
 require "git_commands/branch"
 require "git_commands/repository"
+require "git_commands/aggregator"
 
 module GitCommands
   class Computer
@@ -11,13 +12,13 @@ module GitCommands
     attr_reader :out
     attr_accessor :target
 
-    def initialize(repo:, branches:, target: Branch::MASTER, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
+    def initialize(repo:, branches:, origin: Branch::ORIGIN, target: Branch::MASTER, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
       @out = out
       @repo = repo_klass.new(repo)
       @target = target
+      @origin = origin
       Dir.chdir(@repo) do
         @branches = branch_klass.factory(branches)
-        @timestamp = Time.new.strftime("%Y-%m-%d")
         print_branches
       end
     end
@@ -40,9 +41,9 @@ module GitCommands
           @branches.each do |branch|
             warning("Rebasing branch: #{branch}")
             `git checkout #{branch}`
-            `git pull origin #{branch}`
+            `git pull -r origin #{branch}`
             next unless rebase_with
-            `git push -f origin #{branch}`
+            `git push --force-with-lease origin #{branch}`
             success("Rebased successfully!")
           end
           remove_locals
@@ -50,23 +51,23 @@ module GitCommands
       end
     end
 
-    def aggregate
-      temp = "temp/#{@timestamp}"
-      target = "aggregate/#{@timestamp}"
-      confirm("Aggregate branches into #{target}") do
+    def aggregate(aggregator = Aggregator.new)
+      temp = "temp/#{aggregator.timestamp}"
+      aggregate_name = aggregator.call 
+      confirm("Aggregate branches into #{aggregate_name}") do
         enter_repo do
-          `git branch #{target}`
+          `git branch #{aggregate_name}`
           @branches.each do |branch|
             warning("Merging branch: #{branch}")
             `git checkout -b #{temp} origin/#{branch} --no-track`
-            clean_and_exit([temp, target]) unless rebase_with
-            clean_and_exit([temp]) unless rebase_with(target)
-            `git checkout #{target}`
+            clean_and_exit([temp, aggregate_name]) unless rebase_with
+            clean_and_exit([temp]) unless rebase_with(aggregate_name)
+            `git checkout #{aggregate_name}`
             `git merge #{temp}`
             `git branch -D #{temp}`
           end      
         end
-        success("#{target} branch created")
+        success("#{aggregate_name} branch created")
       end
     end
 
@@ -79,15 +80,21 @@ module GitCommands
     end
 
     private def align
+      `git fetch origin`
+      `git fetch #{@origin} #{@target}`
       `git checkout #{@target}`
-      `git pull`
+      `git pull -r`
     end
 
-    private def rebase_with(branch = "#{Branch::ORIGIN}#{@target}")
+    private def rebase_with(branch = local_target)
       `git rebase #{branch}`
       return true unless @repo.locked?
       @repo.unlock
       error("Got conflicts, aborting rebase with #{branch}!")
+    end
+
+    private def local_target
+      "#{@origin}/#{@target}"
     end
 
     private def enter_repo

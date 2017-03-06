@@ -3,11 +3,11 @@ require "pathname"
 module GitCommands
   using Colorize
   class Branch
-    MASTER = "master"
-    ORIGIN = "origin/"
+    MASTER = ENV.fetch("MASTER") { "master" }
+    ORIGIN = ENV.fetch("ORIGIN") { "origin" }
 
     def self.strip_origin(name)
-      name.strip.split(ORIGIN).last
+      name.strip.split("#{ORIGIN}/").last
     end
 
     def self.by_file(path)
@@ -19,7 +19,7 @@ module GitCommands
 
     def self.by_pattern(pattern)
       return [] unless pattern.index("*")
-      `git branch -r --list #{ORIGIN}#{pattern}`.split("\n").map do |name|
+      `git branch -r --list #{ORIGIN}/#{pattern}`.split("\n").map do |name|
         new(strip_origin(name))
       end.reject(&:master?)
     end
@@ -68,7 +68,7 @@ module GitCommands
     end
 
     def exists?(remote = true)
-      origin = ORIGIN if remote
+      origin = "#{ORIGIN}/" if remote
       `git rev-parse --verify #{origin}#{@name} 2> /dev/null`.match(/^[0-9a-z]+/)
     end
   end
