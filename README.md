@@ -201,19 +201,19 @@ You can overwrite the naming pattern by specifying the following environment var
 ###### Examples
 Passing directly the aggregate name:
 ```shell
-AGGREGATE_PATTERN=my_aggregate aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+AGGREGATE_NAME=my_aggregate aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 ...
 Aggregate branches into my_aggregate (Y/N)?
 ```
 
-Overwriting the aggregate pattern:
+Using the default pattern:
 ```shell
-AGGREGATE_PATTERN=release/<timestamp> aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 ...
 Aggregate branches into release/20170307 (Y/N)?
 ```
 
-Using composite pattern:
+Using a custom pattern:
 ```shell
 RELEASE_TYPE=bugfix \
 RISK=HIGH \
