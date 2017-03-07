@@ -11,7 +11,7 @@ describe GitCommands::Prompt do
 
   it "must print success message" do
     instance.success("i win!")
-    instance.out.string.must_equal "\e[32mi win!\e[0m\n"
+    instance.out.string.must_equal "\e[32m\ni win!\e[0m\n"
   end
 
   it "must print error message" do

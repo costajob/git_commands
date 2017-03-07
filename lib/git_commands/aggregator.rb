@@ -1,13 +1,14 @@
 module GitCommands
   class Aggregator
-    PATTERN = ENV.fetch("AGGREGATOR_PATTERN") { "release/rc-<progressive>.<release_type>_<risk>_<timestamp>" }
-    NAME = ENV["AGGREGATOR_NAME"]
+    PATTERN = ENV.fetch("AGGREGATE_PATTERN") { "release/<timestamp>" }
+    NAME = ENV["AGGREGATE_NAME"]
 
     class InvalidPatternError < ArgumentError; end
 
     def initialize(name: NAME, pattern: PATTERN)
       @name = name
       @pattern = check_pattern(pattern)
+      define_methods
     end
 
     def timestamp
@@ -27,20 +28,16 @@ module GitCommands
       pattern
     end
 
-    private def progressive
-      ENV.fetch("PROGRESSIVE") { 0 }
+    private def pattern_methods
+      @methods ||= @pattern.scan(/<(\w+)>/).flatten - ["timestamp"]
     end
 
-    private def release_type
-      ENV.fetch("RELEASE_TYPE") { "bugfix" }
-    end 
-
-    private def risk
-      ENV.fetch("RISK") { "LOW" }
-    end
-
-    def method_missing(name)
-      ENV.fetch(name.to_s.upcase) { "" }
+    def define_methods
+      pattern_methods.each do |name|
+        define_singleton_method(name) do
+          ENV.fetch(name.upcase) { "" }
+        end
+      end
     end
   end
 end

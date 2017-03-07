@@ -53,16 +53,16 @@ module Mocks
   end
 
   class Computer
-    def initialize(repo:, branches:, origin: "origin", target: "master")
+    def initialize(repo:, branches:, origin: "origin", default: "master")
       @repo = repo
       @origin = origin
-      @target = target
+      @default = default
       @branches = branches
     end
 
-    %w[remove rebase aggregate].each do |msg|
+    %w[create remove rebase aggregate].each do |msg|
       define_method(msg) do
-        "#{msg} on #{@repo}@#{@origin}/#{@target}"
+        "#{msg} on #{@repo}@#{@origin}/#{@default}"
       end
     end
   end

@@ -13,7 +13,7 @@ describe GitCommands::Branch do
     instance.valid?.must_equal false
   end
 
-  it "must detect master branch" do
+  it "must detect default branch" do
     klass.new("master").valid?.must_equal false
   end
 

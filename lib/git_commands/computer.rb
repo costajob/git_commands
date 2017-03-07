@@ -10,13 +10,12 @@ module GitCommands
     class GitError < StandardError; end
 
     attr_reader :out
-    attr_accessor :target
 
-    def initialize(repo:, branches:, origin: Branch::ORIGIN, target: Branch::MASTER, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
+    def initialize(repo:, branches:, origin: Branch::ORIGIN, default: Branch::DEFAULT, repo_klass: Repository, branch_klass: Branch, out: STDOUT)
       @out = out
       @repo = repo_klass.new(repo)
-      @target = target
       @origin = origin
+      @default = default
       Dir.chdir(@repo) do
         @branches = branch_klass.factory(branches)
         print_branches
@@ -36,7 +35,7 @@ module GitCommands
     end
 
     def rebase
-      confirm("Proceed rebasing these branches with #{@target}") do
+      confirm("Proceed rebasing these branches with: #{local_def}") do
         enter_repo do
           @branches.each do |branch|
             warning("Rebasing branch: #{branch}")
@@ -80,21 +79,17 @@ module GitCommands
     end
 
     private def align
+      `git fetch #{@origin} #{@default}`
       `git fetch origin`
-      `git fetch #{@origin} #{@target}`
-      `git checkout #{@target}`
+      `git checkout #{@default}`
       `git pull -r`
     end
 
-    private def rebase_with(branch = local_target)
+    private def rebase_with(branch = local_def)
       `git rebase #{branch}`
       return true unless @repo.locked?
       @repo.unlock
       error("Got conflicts, aborting rebase with #{branch}!")
-    end
-
-    private def local_target
-      "#{@origin}/#{@target}"
     end
 
     private def enter_repo
@@ -105,7 +100,7 @@ module GitCommands
     end
 
     private def remove_locals(branches = @branches)
-      `git checkout #{@target}`
+      `git checkout #{@default}`
       branches.each do |branch|
         `git branch -D #{branch}`
       end
@@ -114,6 +109,10 @@ module GitCommands
     private def clean_and_exit(branches)
       remove_locals(branches)
       exit
+    end
+
+    private def local_def
+      "#{@origin}/#{@default}"
     end
   end
 end

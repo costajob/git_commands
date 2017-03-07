@@ -13,13 +13,21 @@ describe GitCommands::Aggregator do
     instance.call.must_equal name
   end
 
-  it "must call internal methods for default pattern" do
-    instance = klass.new
-    instance.call.must_equal("release/rc-0.bugfix_LOW_20170306")
+  it "must return simple name for simple pattern" do
+    instance = klass.new(pattern: "release/<timestamp>")
+    instance.call.must_equal("release/#{instance.timestamp}")
   end
 
-  it "must call method missing for custom pattern" do
-    instance = klass.new(pattern: "release/rc-<unknown><timestamp>")
-    instance.call.must_equal "release/rc-20170306"
+  it "must replace with env variables for custom pattern" do
+    ENV["RELEASE_TYPE"] = "bugfix"
+    ENV["RISK"] = "LOW"
+    ENV["PROGRESSIVE"] = "3"
+    instance = klass.new(pattern: "release/rc-<progressive>.<release_type>_<risk>_<timestamp>")
+    instance.call.must_equal "release/rc-3.bugfix_LOW_#{instance.timestamp}"
+  end
+
+  it "must fallback to empty string for missing env variables" do
+    instance = klass.new(pattern: "aggregate/rc-<unknown><timestamp>")
+    instance.call.must_equal "aggregate/rc-#{instance.timestamp}"
   end
 end

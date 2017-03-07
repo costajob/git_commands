@@ -16,9 +16,8 @@
 ## Workflow
 This script facilitates adopting a subset of the branch-featuring workflow characterised by:
 * each feature will have its own branch
-* feature branches derive directly form master
-* integration of master to feature branch happens via rebasing to maintain a straight commits line
-* force pushing of feature branches to origin is not an issue
+* integration of feature branch with defaukt one happens via rebasing to maintain a straight commits line
+* is not an issue to `force-with-lease` push feature pranch to origin
 * release branches are created aggregating multiple branches
 
 ## Scope
@@ -48,10 +47,10 @@ Display the help of a specific command by:
 
 ```
 rebase --help
-Usage: rebase --repo=/Users/Elvis/greatest_hits --origin=upstream --target=production --branches=feature/love_me_tender,fetaure/teddybear
+Usage: rebase --repo=/Users/Elvis/greatest_hits --origin=upstream --default=production --branches=feature/love_me_tender,fetaure/teddybear
     -r, --repo=REPO                  The path to the existing GIT repository
-    -o  --origin=ORIGIN              Specify the remote alias, default to ORIGIN environment variable or 'origin'
-    -t, --target=TARGET              Specify the target branch, default to TARGET environment variable or 'master'
+    -o, --origin=ORIGIN              Specify the remote alias (origin)
+    -d, --default=DEFAULT            Specify the default branch (master)
     -b, --branches=BRANCHES          Specify branches as: 1. a comma-separated list of names 2. the path to a file containing names on each line 3. via pattern matching
     -h, --help                       Prints this help
 ```
@@ -134,8 +133,8 @@ rebase --repo=/Users/Elvis/greatest_hits --branches=noent1,noent2
 No branches loaded!
 ```
 
-##### Master branch
-Master branch cannot be included into the branches list for obvious reasons:
+##### Default branch
+Default branch cannot be included into the branches list for obvious reasons:
 
 ```
 rebase --repo=/Users/Elvis/greatest_hits --branches=master,feature/love_me_tender
@@ -149,7 +148,7 @@ Successfully loaded 1 branch:
 Here are the available GIT commands:
 
 #### Rebase
-This command is useful in case you have several branches to rebase with _origin/master_ (or another specified target) frequently.
+This command is useful in case you have to rebase several branches with _origin/master_ (or another specified default) frequently.
 A confirmation is asked to before rebasing.  
 
 ```
@@ -157,17 +156,17 @@ rebase --repo=/Users/Elvis/greatest_hits --branches=feature/love_me_tender,featu
 ...
 ```
 
-##### Target branch
-The rebasing runs considering master branch as the target one.  
-In case you need to rebase against a different target branch you can specify it:
+##### Changing origin
+The rebasing runs considering `master` branch as the default one and `origin` as the remote alias.  
+In case you need to rebase against a different origin and default branch you can specify them by command line:
 ```
-rebase --repo=/Users/Elvis/greatest_hits --target=rc/release_to_graceland --branches=feature/love_me_tender
+rebase --repo=/Users/Elvis/greatest_hits --origin=upstream --default=production --branches=feature/love_me_tender
 
 Loading branches file...
 Successfully loaded 1 branch:
 01. feature/love_me_tender
 
-Proceed rebasing these branches with rc/release_to_graceland (Y/N)?
+Proceed rebasing these branches with upstream/production (Y/N)?
 ```
 
 #### Remove
@@ -190,11 +189,36 @@ aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 
 ##### Aggregate naming
 The created aggregate branch follows a default naming convention pattern: 
-`release/rc-<progressive>.<release_type>_<risk>_<timestamp>` 
+`aggregate/<timestamp>` 
 
 Each of the term within the `<` and `>` chars are replaced by related (upcased) environment variables, but for the `timestamp`, that is computed at runtime in the `yyyymmdd` format.  
+Consider a valid pattern should at least contain one replaceable part within the `<` and `>` chars.
 
-You can overwrite the pattern by specifying the following environment variables:
-* `AGGREGATOR_NAME` - the name to be used by the aggregator branch, no matter the pattern variables
-* `AGGREGATOR_PATTERN` - change the naming pattern by specifying the related environment variables per each specified part within the `<` and `>` chars (default to empty string if not declared)
+You can overwrite the naming pattern by specifying the following environment variables:
+* `AGGREGATE_NAME` - the name to be used directly for the aggregator branch, without any pattern replacements
+* `AGGREGATE_PATTERN` - change the default pattern by specifying the related environment variables for each parts within the `<` and `>` chars
 
+###### Examples
+Passing directly the aggregate name:
+```shell
+AGGREGATE_PATTERN=my_aggregate aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+...
+Aggregate branches into my_aggregate (Y/N)?
+```
+
+Overwriting the aggregate pattern:
+```shell
+AGGREGATE_PATTERN=release/<timestamp> aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+...
+Aggregate branches into release/20170307 (Y/N)?
+```
+
+Using composite pattern:
+```shell
+RELEASE_TYPE=bugfix \
+RISK=HIGH \
+PROGRESSIVE=3 \
+AGGREGATE_PATTERN="release/rc-<progressive>.<release_type>_<risk>_<timestamp>" aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
+...
+Aggregate branches into release/rc-3.bugfix_HIGH_20170307 (Y/N)?
+```

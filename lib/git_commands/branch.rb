@@ -3,8 +3,8 @@ require "pathname"
 module GitCommands
   using Colorize
   class Branch
-    MASTER = ENV.fetch("MASTER") { "master" }
-    ORIGIN = ENV.fetch("ORIGIN") { "origin" }
+    DEFAULT = "master"
+    ORIGIN = "origin"
 
     def self.strip_origin(name)
       name.strip.split("#{ORIGIN}/").last
@@ -21,7 +21,7 @@ module GitCommands
       return [] unless pattern.index("*")
       `git branch -r --list #{ORIGIN}/#{pattern}`.split("\n").map do |name|
         new(strip_origin(name))
-      end.reject(&:master?)
+      end.reject(&:default?)
     end
 
     def self.by_names(names_list)
@@ -54,7 +54,7 @@ module GitCommands
     end
 
     def valid?
-      return false if master?
+      return false if default?
       return false unless exists?
       true
     end
@@ -63,8 +63,8 @@ module GitCommands
       self.name == other.name
     end
 
-    def master?
-      @name == MASTER
+    def default?
+      @name == DEFAULT
     end
 
     def exists?(remote = true)

@@ -16,7 +16,7 @@ module GitCommands
     end
 
     def success(message)
-      out.puts message.to_s.green
+      out.puts "\n#{message}".green
       true
     end
 
