@@ -20,15 +20,13 @@ module GitCommands
 
     def call
       parser.parse!(@args)
-      computer = @computer_klass.new(repo: @repo, branches: @branches, origin: @origin, default: default)
+      @origin ||= Branch::ORIGIN
+      @default ||= Branch::DEFAULT
+      computer = @computer_klass.new(repo: @repo, branches: @branches, origin: @origin, default: @default)
       computer.send(@command_name)
     rescue Repository::PathError, Computer::GitError, AbortError, Repository::InvalidError => e
       error(e.message)  
       exit
-    end
-
-    private def default
-      @default || Branch::DEFAULT
     end
 
     private def check_command_name(name)

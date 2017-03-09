@@ -1,16 +1,25 @@
 require "spec_helper"
 
 describe GitCommands::CLI do
+  let(:repo) { "/Users/Elvis/greatest_hits" }
+  let(:branches) { "teddybear,love_me_tender" }
+
   it "must raise an error for unknown command" do
     -> { GitCommands::CLI.new(command_name: "noent") }.must_raise GitCommands::CLI::UnknownCommandError
   end
 
-  it "must call the spcified command on the built instance" do
-    repo = "/Users/Elvis/greatest_hits"
+  it "must call the spcified command with default options" do
+    GitCommands::CLI::VALID_COMMANDS.each do |name|
+      cli = GitCommands::CLI.new(command_name: name, args: %W[--repo=#{repo} --branches=#{branches}], computer_klass: Mocks::Computer)
+      cli.call.must_equal "#{name} on #{repo}@origin/master"
+    end
+  end
+
+  it "must call the spcified command with custom options" do
     origin = "upstream"
     default = "production"
     GitCommands::CLI::VALID_COMMANDS.each do |name|
-      cli = GitCommands::CLI.new(command_name: name, args: %W[--repo=#{repo} --origin=#{origin} --default=#{default} --branches=teddybear,love_me_tender], computer_klass: Mocks::Computer)
+      cli = GitCommands::CLI.new(command_name: name, args: %W[--repo=#{repo} --origin=#{origin} --default=#{default} --branches=#{branches}], computer_klass: Mocks::Computer)
       cli.call.must_equal "#{name} on #{repo}@#{origin}/#{default}"
     end
   end
