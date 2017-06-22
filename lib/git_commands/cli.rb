@@ -36,10 +36,10 @@ module GitCommands
 
     private def parser
       OptionParser.new do |opts|
-        opts.banner = "Usage: #{@command_name} --repo=/Users/Elvis/greatest_hits --origin=upstream --default=production --branches=feature/love_me_tender,fetaure/teddybear"
+        opts.banner = "Usage: #{@command_name} --repo=~/greatest_hits --origin=upstream --default=production --branches=feature/love_me_tender,fetaure/teddybear"
 
         opts.on("-rREPO", "--repo=REPO", "The path to the existing GIT repository") do |repo|
-          @repo = repo
+          @repo = File.expand_path(repo)
         end
 
         opts.on("-oORIGIN", "--origin=ORIGIN", "Specify the remote alias (origin)") do |origin|
