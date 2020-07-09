@@ -189,7 +189,7 @@ aggregate --repo=/Users/Elvis/greatest_hits --branches=*ready*
 
 ##### Aggregate naming
 The created aggregate branch follows a default naming convention pattern: 
-`aggregate/<timestamp>` 
+`release/<timestamp>` 
 
 Each of the term within the `<` and `>` chars are replaced by related (upcased) environment variables, but for the `timestamp`, that is computed at runtime in the `yyyymmdd` format.  
 Consider a valid pattern should at least contain one replaceable part within the `<` and `>` chars.
